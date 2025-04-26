@@ -1,0 +1,37 @@
+{
+  "name": "Lucky Draw System",
+  "short_name": "Lucky Draw",
+  "description": "Professional online lucky draw system supporting customized participant lists, winner counts and prize settings.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#061433",
+  "theme_color": "#061433",
+  "orientation": "portrait-primary",
+  "dir": "ltr",
+  "lang": "en-US",
+  "scope": "/",
+  "categories": ["tools", "business", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "48x48 72x72 96x96 128x128 256x256"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Drawing",
+      "short_name": "Draw",
+      "description": "Quickly start a lucky draw",
+      "url": "/?action=start",
+      "icons": [{ "src": "/shortcuts/draw.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Import List",
+      "short_name": "Import",
+      "description": "Import participant list",
+      "url": "/?action=import",
+      "icons": [{ "src": "/shortcuts/import.png", "sizes": "96x96" }]
+    }
+  ]
+}
