@@ -11,16 +11,7 @@ export default function WinnersDisplay() {
   const t = useTranslations("LuckyDraw");
   const { winners, status, setStatus, participants, prizeTitle } = useDraw();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-
-  // 防抖滚动处理
-  const handleScroll = () => {
-    if (!isScrolling) {
-      setIsScrolling(true);
-      setTimeout(() => setIsScrolling(false), 200);
-    }
-  };
 
   // 当状态变为completed时立即设置为可见
   useEffect(() => {
@@ -39,25 +30,6 @@ export default function WinnersDisplay() {
     };
   }, [participants.length, winners.length]);
 
-  // 根据获奖者数量决定弹窗尺寸
-  const getModalSize = useMemo(() => {
-    if (winners.length <= 3)
-      return { width: "md:w-[500px] w-[90%]", maxHeight: "max-h-[600px]" };
-    if (winners.length <= 8)
-      return { width: "md:w-[700px] w-[90%]", maxHeight: "max-h-[700px]" };
-    if (winners.length <= 20)
-      return { width: "md:w-[800px] w-[90%]", maxHeight: "max-h-[800px]" };
-    return { width: "md:w-[900px] w-[95%]", maxHeight: "max-h-[90vh]" };
-  }, [winners.length]);
-
-  // 每行显示的获奖者数量
-  const winnersPerRow = useMemo(() => {
-    if (winners.length <= 3) return 3;
-    if (winners.length <= 8) return 4;
-    if (winners.length <= 20) return 5;
-    return 6;
-  }, [winners.length]);
-
   // 根据获奖者数量决定卡片尺寸
   const getWinnerSize = useMemo(() => {
     if (winners.length <= 3)
@@ -74,7 +46,13 @@ export default function WinnersDisplay() {
   return (
     <AnimatePresence>
       {isVisible && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-[#020818]/70 backdrop-blur-sm tech-interface">
+        <motion.div
+          key="winners-modal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 flex items-center justify-center z-50 bg-[#020818]/70 backdrop-blur-sm tech-interface"
+        >
           {/* 半透明背景遮罩，点击关闭 */}
           <div
             className="absolute inset-0"
@@ -87,6 +65,7 @@ export default function WinnersDisplay() {
 
           {/* 弹窗容器 */}
           <motion.div
+            key="modal-container"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
@@ -137,17 +116,20 @@ export default function WinnersDisplay() {
               </div>
             </div>
 
-            {/* 获奖者展示区域 */}
+            {/* 获奖者展示区域 - 使用原生滚动 */}
             <div
               ref={containerRef}
-              className="tech-content p-5 overflow-y-auto"
-              style={{ maxHeight: "calc(80vh - 100px)" }}
-              onScroll={handleScroll}
+              className="tech-content p-5 overflow-y-auto overflow-x-hidden"
+              style={{
+                maxHeight: "calc(80vh - 100px)",
+                overflowY: "auto", // 确保使用原生滚动
+                WebkitOverflowScrolling: "touch", // 在iOS上提供惯性滚动体验
+              }}
             >
               <div className="flex flex-wrap justify-center gap-4">
                 {winners.map((winner, index) => (
                   <motion.div
-                    key={`winner-${index}`}
+                    key={`winner-${winner.name}-${index}`}
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{
@@ -167,7 +149,7 @@ export default function WinnersDisplay() {
                     <div className="tech-winner-border-glow"></div>
 
                     {/* 内部发光边框 */}
-                    <div className="absolute inset-0 border border-[#4b8bff]/80 tech-winner-border rounded-md"></div>
+                    <div className="absolute inset-0 border border-[#4b8bff]/50 tech-winner-border"></div>
 
                     {/* 顶部发光边框 */}
                     <div className="absolute top-0 left-[15%] right-[15%] h-[2px] bg-[#4b8bff]/90"></div>
@@ -176,10 +158,10 @@ export default function WinnersDisplay() {
                     <div className="absolute bottom-0 left-[25%] right-[25%] h-[1px] bg-[#4b8bff]/50"></div>
 
                     {/* 角落装饰 */}
-                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#4b8bff]/90"></div>
-                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#4b8bff]/90"></div>
-                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[#4b8bff]/90"></div>
-                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#4b8bff]/90"></div>
+                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-[#4b8bff]"></div>
+                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-[#4b8bff]"></div>
+                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-[#4b8bff]"></div>
+                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-[#4b8bff]"></div>
 
                     {/* 中心内容 */}
                     <div className="tech-winner-content relative z-10 p-2 h-full flex flex-col items-center justify-center">
@@ -213,9 +195,12 @@ export default function WinnersDisplay() {
                   </motion.div>
                 ))}
               </div>
+
+              {/* 底部空间，确保最后一行完全可见 */}
+              <div className="h-4"></div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
 
       {/* 技术风格CSS */}
@@ -358,7 +343,7 @@ export default function WinnersDisplay() {
           }
         }
 
-        /* 滚动条样式 */
+        /* 滚动条样式 - 保持原有样式但确保使用原生滚动 */
         .tech-content::-webkit-scrollbar {
           width: 8px;
         }
