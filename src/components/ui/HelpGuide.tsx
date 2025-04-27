@@ -38,7 +38,7 @@ export default function HelpGuide() {
       {/* 帮助指南弹窗 */}
       {showGuide && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-          <div className="bg-gradient-to-b from-[#111a35] to-[#0a1228] p-6 rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-xl border border-blue-900/30">
+          <div className="bg-gradient-to-b from-[#111a35] to-[#0a1228] p-6 rounded-xl w-[80%] max-h-[90vh] overflow-y-auto shadow-xl border border-blue-900/30">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#4d76f5] via-[#a741ff] to-[#4d76f5]">
                 {t("helpGuideTitle")}
