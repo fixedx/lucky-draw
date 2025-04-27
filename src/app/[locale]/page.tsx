@@ -26,6 +26,7 @@ import { Participant } from "../../types/types";
 
 // Import styles
 import "../../components/styles/animations.css";
+import LanguageSwitcher from "@/components/ui/LanguageSwitcher";
 
 export default function LuckyDraw() {
   const tIntl = useTranslations("LuckyDraw");
@@ -126,7 +127,7 @@ export default function LuckyDraw() {
             className="w-full h-screen flex flex-col overflow-hidden relative bg-gradient-to-b from-[#05071b] to-[#061433] text-white"
           >
             {/* Language Switcher */}
-            {/* <LanguageSwitcher /> */}
+            <LanguageSwitcher />
 
             {/* 3D Scene */}
             <Scene locale={locale} />

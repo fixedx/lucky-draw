@@ -1,10 +1,24 @@
 import { getRequestConfig } from 'next-intl/server';
 import enMessages from '../../messages/en.json';
 import zhMessages from '../../messages/zh.json';
+import frMessages from '../../messages/fr.json';
+import deMessages from '../../messages/de.json';
+import esMessages from '../../messages/es.json';
+import koMessages from '../../messages/ko.json';
+import jaMessages from '../../messages/ja.json';
+import ptMessages from '../../messages/pt.json';
+import ruMessages from '../../messages/ru.json';
 
 const messages = {
     en: enMessages,
-    zh: zhMessages
+    zh: zhMessages,
+    fr: frMessages,
+    de: deMessages,
+    es: esMessages,
+    ko: koMessages,
+    ja: jaMessages,
+    pt: ptMessages,
+    ru: ruMessages
 };
 
 export default getRequestConfig(async ({ requestLocale }) => {

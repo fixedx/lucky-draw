@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 
 const middleware = createMiddleware({
     // 支持的语言列表
-    locales: ['en', 'zh'],
+    locales: ['en', 'zh', 'fr', 'de', 'es', 'ko', 'ja', 'pt', 'ru'],
 
     // 默认语言
     defaultLocale: 'en',
