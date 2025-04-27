@@ -67,6 +67,7 @@
     "unsupportedFile": "Unsupported file",
     "settings": "Settings",
     "close": "Close",
+    "save": "Save",
     "drawSpeed": "Draw Speed",
     "autoDrawDuration": "Auto Draw Duration (seconds)",
     "enableSound": "Enable Sound",

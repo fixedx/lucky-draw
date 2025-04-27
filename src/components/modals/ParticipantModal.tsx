@@ -179,7 +179,7 @@ export default function ParticipantModal({
               onClick={() => setShowModal(false)}
               className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-indigo-800 transition-colors"
             >
-              {t("close")}
+              {t("save")}
             </button>
           </div>
         </div>
