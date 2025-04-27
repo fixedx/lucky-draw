@@ -169,12 +169,14 @@ export const DrawProvider: React.FC<{
 
   // 完成抽奖
   const completeDrawing = useCallback(() => {
+    // 立即设置为完成状态，减少显示的延迟
+    setStatus("completed");
+
     // 从参与者名单中随机选择获奖者
     const selectedWinners = selectRandomWinners(participants, winnerCount);
 
     setWinners(selectedWinners);
     setIsDrawing(false);
-    setStatus("completed");
 
     // 更新全局中奖者列表
     setAllWinners((prevWinners) => {
@@ -199,23 +201,32 @@ export const DrawProvider: React.FC<{
 
       setCustomParticipants(updatedParticipants);
       saveParticipantsToStorage(updatedParticipants);
-
-      // 保存中奖者到localStorage
-      saveWinnersToStorage(selectedWinners);
     }
 
-    // 回调通知父组件
-    if (onComplete) {
-      onComplete(selectedWinners);
-    }
+    // 保存中奖名单到本地存储
+    saveWinnersToStorage(selectedWinners);
 
-    // 播放完成音效
+    // 触发外部完成回调
+    onComplete?.(selectedWinners);
+
+    // 添加声音效果
     if (enableSound) {
-      const completeAudio = new Audio("/lucky-draw-complete.mp3");
-      completeAudio.volume = 0.6;
-      completeAudio.play().catch((e) => console.log("音频播放失败:", e));
+      try {
+        const audio = new Audio("/win-sound.mp3");
+        audio.volume = 0.5;
+        audio.play().catch((e) => console.log("完成音频播放失败:", e));
+      } catch (e) {
+        console.error("音频播放错误:", e);
+      }
     }
-  }, [participants, winnerCount, enableSound, onComplete, customParticipants]);
+  }, [
+    participants,
+    winnerCount,
+    customParticipants,
+    onComplete,
+    enableSound,
+    setCustomParticipants,
+  ]);
 
   // 重置抽奖历史
   const resetDrawHistory = useCallback(() => {
