@@ -89,13 +89,13 @@ export default function LanguageSwitcher() {
       </button>
 
       {isLangMenuOpen && (
-        <div className="absolute right-0 mt-2 w-40 bg-white/90 backdrop-blur-sm border border-gray-200 rounded-md shadow-lg overflow-hidden z-10 transition-opacity max-h-80 overflow-y-auto">
-          <div className="py-1">
+        <div className="absolute right-0 mt-2 w-44 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-10 transition-opacity max-h-[400px] overflow-y-auto custom-scrollbar">
+          <div className="py-1 cursor-pointer">
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "en"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("en")}
             >
@@ -105,8 +105,8 @@ export default function LanguageSwitcher() {
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "zh"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("zh")}
             >
@@ -117,8 +117,8 @@ export default function LanguageSwitcher() {
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "fr"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("fr")}
             >
@@ -128,8 +128,8 @@ export default function LanguageSwitcher() {
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "de"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("de")}
             >
@@ -139,8 +139,8 @@ export default function LanguageSwitcher() {
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "es"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("es")}
             >
@@ -150,8 +150,8 @@ export default function LanguageSwitcher() {
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "pt"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("pt")}
             >
@@ -161,8 +161,8 @@ export default function LanguageSwitcher() {
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "ru"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("ru")}
             >
@@ -172,8 +172,8 @@ export default function LanguageSwitcher() {
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "ko"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("ko")}
             >
@@ -183,8 +183,8 @@ export default function LanguageSwitcher() {
             <button
               className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 ${
                 locale === "ja"
-                  ? "bg-indigo-50 text-indigo-700"
-                  : "text-gray-700 hover:bg-gray-100"
+                  ? "bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300"
+                  : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50"
               }`}
               onClick={() => handleLanguageChange("ja")}
             >
