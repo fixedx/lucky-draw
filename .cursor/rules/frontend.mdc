@@ -1,0 +1,156 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Lucky Draw 前端规则文档
+
+## 目录结构
+
+```
+lucky-draw/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── [locale]/          # 国际化路由
+│   │   ├── globals.css        # 全局样式
+│   │   ├── layout.tsx         # 根布局
+│   │   └── page.tsx          # 首页
+│   ├── components/            # 组件库
+│   │   └── LanguageSwitcher.tsx # 语言切换器
+│   ├── i18n/                 # 国际化配置
+│   ├── types/                # TypeScript类型定义
+│   │   ├── types.ts          # 核心类型
+│   │   └── global.d.ts       # 全局类型声明
+│   ├── utils/                # 工具函数
+│   │   ├── storageUtils.ts   # 本地存储工具
+│   │   └── nameGenerator.ts  # 名称生成器
+│   └── middleware.ts         # Next.js中间件
+├── public/                   # 静态资源
+├── messages/                 # 国际化消息文件
+├── next.config.ts           # Next.js配置
+├── tailwind.config.js       # Tailwind CSS配置
+├── tsconfig.json           # TypeScript配置
+└── package.json            # 项目依赖配置
+```
+
+## 核心规则
+
+### 组件命名规范
+- **规则1**：组件文件必须使用PascalCase命名格式
+  - ✅ 正确：`Scene.tsx`, `LanguageSwitcher.tsx`
+  - ❌ 错误：`scene.tsx`, `language-switcher.tsx`
+
+- **规则2**：组件目录按功能模块组织，使用小写+连字符格式
+  - ✅ 正确：`3d/`, `roulette/`, `modals/`
+  - ❌ 错误：`3D/`, `Roulette/`, `Modals/`
+
+### 类型定义规范
+- **规则3**：所有接口必须以大写`I`开头或使用描述性名称
+  - ✅ 正确：`Participant`, `SceneRefs`, `Particle`
+  - 示例：
+    ```typescript
+    export interface Participant {
+        name: string;
+        position?: THREE.Vector3;
+        element?: HTMLDivElement;
+    }
+    ```
+
+- **规则4**：3D相关类型必须明确引用THREE.js类型
+  - ✅ 正确：`THREE.Vector3`, `THREE.Scene`, `THREE.WebGLRenderer`
+
+### 路由和国际化规范
+- **规则5**：所有页面路由必须支持国际化，使用`[locale]`动态路由
+  - 路径格式：`/[locale]/page-name`
+  - 支持的语言：`en`, `zh`, `fr`, `de`, `es`, `ko`, `ja`, `pt`, `ru`
+
+- **规则6**：默认语言为英语(en)，但必须始终显示语言前缀
+  - ✅ 正确：`/en/`, `/zh/`, `/fr/`
+  - ❌ 错误：`/`（根路径）
+
+## 配置规范
+
+### Next.js配置(`next.config.ts`)
+- **国际化插件**：必须使用`next-intl`插件
+  ```typescript
+  const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+  ```
+
+- **构建配置**：
+  - `eslint.ignoreDuringBuilds: true` - 构建时忽略ESLint错误
+  - `typescript.ignoreBuildErrors: true` - 构建时忽略TypeScript错误
+
+- **别名配置**：
+  - `@` 别名指向 `./src` 目录
+  - 在Turbo和webpack中都需要配置
+
+### 中间件配置(`middleware.ts`)
+- **语言检测**：启用自动语言检测(`localeDetection: true`)
+- **路径匹配**：排除API路由、Next.js内部文件和静态资源
+  ```typescript
+  matcher: ['/((?!api|_next|.*\\..*).*)']
+  ```
+
+### 依赖管理
+- **3D渲染**：使用Three.js (`three: ^0.175.0`)
+- **动画**：使用Framer Motion (`framer-motion: ^12.9.2`)
+- **样式**：使用Tailwind CSS v4
+- **图标**：使用Font Awesome (`@fortawesome/*`)
+- **图像处理**：使用Jimp和Sharp
+
+## 异常处理
+
+### 常见错误类型及解决方案
+
+#### 1. 构建错误
+- **症状**：TypeScript或ESLint错误导致构建失败
+- **解决方案**：
+  - 检查`next.config.ts`中的忽略配置
+  - 确保`ignoreDuringBuilds`和`ignoreBuildErrors`设置为`true`
+
+#### 2. 3D场景渲染问题
+- **症状**：Three.js场景无法正常显示
+- **解决方案**：
+  - 检查`SceneRefs`类型是否正确定义
+  - 确保WebGL支持检测
+  - 验证camera、renderer、controls的初始化顺序
+
+#### 3. 国际化路由问题
+- **症状**：页面404或语言切换失效
+- **解决方案**：
+  - 检查`middleware.ts`配置
+  - 确保所有页面都在`[locale]`目录下
+  - 验证`messages/`目录下有对应语言文件
+
+#### 4. 依赖冲突
+- **症状**：包安装或运行时错误
+- **解决方案**：
+  - 使用pnpm作为包管理器
+  - 检查`package.json`中的版本约束
+  - 特别注意React 19和Next.js 15的兼容性
+
+<!-- TODO: 添加更多3D场景优化指南 -->
+<!-- TODO: 添加抽奖算法相关的业务规则 -->
+<!-- TODO: 添加性能优化最佳实践 -->
+<!-- TODO: 添加测试规范和指南 -->
+
+## 开发注意事项
+
+### 开发环境
+- 使用`pnpm dev --turbopack`启动开发服务器
+- Node.js版本要求：≥18.17
+
+### 代码质量
+- 遵循ESLint规则（开发时）
+- 使用TypeScript严格模式
+- 组件必须支持响应式设计
+
+### 性能考虑
+- 3D场景需要考虑设备性能限制
+- 图像处理操作应在Web Worker中执行
+- 大型依赖使用动态导入
+
+### 安全注意
+- 用户上传的文件需要验证格式和大小
+- JWT令牌处理需要加密存储
+- 避免在客户端暴露敏感配置

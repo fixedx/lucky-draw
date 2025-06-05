@@ -1,231 +1,180 @@
-import { Participant } from "../types/types";
+import type { StorageData, Participant } from '@/types/types';
 
-// 存储键名
 const STORAGE_KEYS = {
-    PARTICIPANTS: "lucky-draw-participants",
-    WINNERS: "lucky-draw-winners",
-    ORIGINAL_PARTICIPANTS: "lucky-draw-original-participants",
-};
+    PARTICIPANTS: 'ball_lottery_participants',
+    WINNERS: 'ball_lottery_winners',
+    SETTINGS: 'ball_lottery_settings',
+} as const;
 
-/**
- * 保存参与者名单到 localStorage
- * @param participants 参与者数组
- * @returns 是否保存成功
- */
-export const saveParticipantsToStorage = (participants: Participant[]): boolean => {
+// 获取参与者名单
+export function getStoredParticipants(): string[] {
+    if (typeof window === 'undefined') return [];
+
+    try {
+        const stored = localStorage.getItem(STORAGE_KEYS.PARTICIPANTS);
+        return stored ? JSON.parse(stored) : [];
+    } catch (error) {
+        console.error('Error loading participants from storage:', error);
+        return [];
+    }
+}
+
+// 保存参与者名单
+export function saveParticipants(participants: string[]): void {
+    if (typeof window === 'undefined') return;
+
     try {
         localStorage.setItem(STORAGE_KEYS.PARTICIPANTS, JSON.stringify(participants));
-        return true;
     } catch (error) {
-        console.error("保存参与者名单到本地存储失败:", error);
-        return false;
+        console.error('Error saving participants to storage:', error);
     }
-};
+}
 
-/**
- * 从 localStorage 获取参与者名单
- * @returns 参与者数组或 null（如果不存在）
- */
-export const getParticipantsFromStorage = (): Participant[] | null => {
+// 获取中奖名单
+export function getStoredWinners(): string[] {
+    if (typeof window === 'undefined') return [];
+
     try {
-        const storedData = localStorage.getItem(STORAGE_KEYS.PARTICIPANTS);
-        if (!storedData) return null;
-
-        const participants = JSON.parse(storedData) as Participant[];
-
-        // 验证数据格式是否正确
-        if (!Array.isArray(participants) || participants.some(p => typeof p.name !== 'string')) {
-            console.warn("本地存储中的参与者数据格式不正确");
-            return null;
-        }
-
-        return participants;
+        const stored = localStorage.getItem(STORAGE_KEYS.WINNERS);
+        return stored ? JSON.parse(stored) : [];
     } catch (error) {
-        console.error("从本地存储获取参与者名单失败:", error);
+        console.error('Error loading winners from storage:', error);
+        return [];
+    }
+}
+
+// 保存中奖名单
+export function saveWinners(winners: string[]): void {
+    if (typeof window === 'undefined') return;
+
+    try {
+        localStorage.setItem(STORAGE_KEYS.WINNERS, JSON.stringify(winners));
+    } catch (error) {
+        console.error('Error saving winners to storage:', error);
+    }
+}
+
+// 添加中奖者
+export function addWinner(winner: string): void {
+    const winners = getStoredWinners();
+    if (!winners.includes(winner)) {
+        winners.push(winner);
+        saveWinners(winners);
+    }
+}
+
+// 获取抽奖设置
+export function getStoredSettings() {
+    if (typeof window === 'undefined') return null;
+
+    try {
+        const stored = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+        return stored ? JSON.parse(stored) : null;
+    } catch (error) {
+        console.error('Error loading settings from storage:', error);
         return null;
     }
-};
+}
 
-/**
- * 清除本地存储中的参与者名单
- * @returns 是否清除成功
- */
-export const clearParticipantsFromStorage = (): boolean => {
+// 保存抽奖设置
+export function saveSettings(settings: any): void {
+    if (typeof window === 'undefined') return;
+
+    try {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+    } catch (error) {
+        console.error('Error saving settings to storage:', error);
+    }
+}
+
+// 重置所有数据
+export function resetAllData(): void {
+    if (typeof window === 'undefined') return;
+
     try {
         localStorage.removeItem(STORAGE_KEYS.PARTICIPANTS);
-        return true;
-    } catch (error) {
-        console.error("清除本地存储中的参与者名单失败:", error);
-        return false;
-    }
-};
-
-/**
- * 保存原始参与者名单到 localStorage（备份用）
- * @param participants 参与者数组
- * @returns 是否保存成功
- */
-export const saveOriginalParticipantsToStorage = (participants: Participant[]): boolean => {
-    try {
-        // 只在未保存过原始名单时才保存
-        if (!localStorage.getItem(STORAGE_KEYS.ORIGINAL_PARTICIPANTS)) {
-            localStorage.setItem(STORAGE_KEYS.ORIGINAL_PARTICIPANTS, JSON.stringify(participants));
-        }
-        return true;
-    } catch (error) {
-        console.error("保存原始参与者名单到本地存储失败:", error);
-        return false;
-    }
-};
-
-/**
- * 从 localStorage 获取原始参与者名单
- * @returns 原始参与者数组或 null（如果不存在）
- */
-export const getOriginalParticipantsFromStorage = (): Participant[] | null => {
-    try {
-        const storedData = localStorage.getItem(STORAGE_KEYS.ORIGINAL_PARTICIPANTS);
-        if (!storedData) return null;
-
-        const participants = JSON.parse(storedData) as Participant[];
-
-        // 验证数据格式是否正确
-        if (!Array.isArray(participants) || participants.some(p => typeof p.name !== 'string')) {
-            console.warn("本地存储中的原始参与者数据格式不正确");
-            return null;
-        }
-
-        return participants;
-    } catch (error) {
-        console.error("从本地存储获取原始参与者名单失败:", error);
-        return null;
-    }
-};
-
-/**
- * 保存中奖者名单到 localStorage
- * @param winners 中奖者数组
- * @returns 是否保存成功
- */
-export const saveWinnersToStorage = (winners: Participant[]): boolean => {
-    try {
-        // 获取已有的中奖者
-        const existingWinners = getWinnersFromStorage() || [];
-
-        // 合并新的中奖者（避免重复）
-        const uniqueWinners = [...existingWinners];
-
-        for (const winner of winners) {
-            if (!uniqueWinners.some(w => w.name === winner.name)) {
-                uniqueWinners.push(winner);
-            }
-        }
-
-        localStorage.setItem(STORAGE_KEYS.WINNERS, JSON.stringify(uniqueWinners));
-        return true;
-    } catch (error) {
-        console.error("保存中奖者名单到本地存储失败:", error);
-        return false;
-    }
-};
-
-/**
- * 从 localStorage 获取中奖者名单
- * @returns 中奖者数组或 null（如果不存在）
- */
-export const getWinnersFromStorage = (): Participant[] | null => {
-    try {
-        const storedData = localStorage.getItem(STORAGE_KEYS.WINNERS);
-        if (!storedData) return null;
-
-        const winners = JSON.parse(storedData) as Participant[];
-
-        // 验证数据格式是否正确
-        if (!Array.isArray(winners) || winners.some(w => typeof w.name !== 'string')) {
-            console.warn("本地存储中的中奖者数据格式不正确");
-            return null;
-        }
-
-        return winners;
-    } catch (error) {
-        console.error("从本地存储获取中奖者名单失败:", error);
-        return null;
-    }
-};
-
-/**
- * 清除本地存储中的中奖者名单
- * @returns 是否清除成功
- */
-export const clearWinnersFromStorage = (): boolean => {
-    try {
         localStorage.removeItem(STORAGE_KEYS.WINNERS);
-        return true;
+        localStorage.removeItem(STORAGE_KEYS.SETTINGS);
     } catch (error) {
-        console.error("清除本地存储中的中奖者名单失败:", error);
-        return false;
+        console.error('Error resetting storage data:', error);
     }
-};
+}
 
-/**
- * 重置所有抽奖相关的存储
- * @returns 是否重置成功
- */
-export const resetAllDrawStorage = (): boolean => {
-    try {
-        // 获取原始参与者名单
-        const originalParticipants = getOriginalParticipantsFromStorage();
+// 导出数据到文件
+export function exportToFile(participants: string[], winners: string[]): void {
+    const data: StorageData = {
+        originalParticipants: participants,
+        winners: winners,
+        lastUpdated: new Date().toISOString(),
+    };
 
-        // 重置参与者为原始状态
-        if (originalParticipants) {
-            saveParticipantsToStorage(originalParticipants);
-        }
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
+    });
 
-        // 清除中奖名单
-        clearWinnersFromStorage();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `lottery_data_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
-        return true;
-    } catch (error) {
-        console.error("重置抽奖存储失败:", error);
-        return false;
-    }
-};
+// 从文本文件导入参与者
+export function importFromTextFile(file: File): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
 
-/**
- * 验证导入的参与者数据格式是否正确
- * @param data 要验证的数据
- * @returns 有效的参与者数组或 null
- */
-export const validateImportedParticipants = (data: { [key: string]: string }[]): Participant[] | null => {
-    if (!data || !Array.isArray(data)) {
-        return null;
-    }
+        reader.onload = (e) => {
+            try {
+                const text = e.target?.result as string;
+                const lines = text
+                    .split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0);
 
-    // 尝试将数据转换为正确的格式
-    try {
-        const validParticipants = data
-            .filter(item => item && (typeof item === 'object' || typeof item === 'string'))
-            .map(item => {
-                // 如果是字符串，将其作为名字
-                if (typeof item === 'string') {
-                    return { name: (item as string).trim() };
-                }
+                resolve(lines);
+            } catch (error) {
+                reject(error);
+            }
+        };
 
-                // 如果是对象，确保它有name属性
-                if (typeof item === 'object' && item.name && typeof item.name === 'string') {
-                    return {
-                        name: item.name.trim(),
-                        ...(item.id !== undefined && { id: item.id })
-                    };
-                }
+        reader.onerror = () => {
+            reject(new Error('文件读取失败'));
+        };
 
-                return null;
-            })
-            .filter(Boolean) as Participant[];
+        reader.readAsText(file, 'utf-8');
+    });
+}
 
-        return validParticipants.length > 0 ? validParticipants : null;
-    } catch (error) {
-        console.error("验证导入的参与者数据失败:", error);
-        return null;
-    }
-}; 
+// 导出参与者名单到TXT文件
+export function exportParticipantsToTxt(participants: string[]): void {
+    const text = participants.join('\n');
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `participants_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// 导出中奖名单到TXT文件
+export function exportWinnersToTxt(winners: string[]): void {
+    const text = winners.join('\n');
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `winners_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+} 

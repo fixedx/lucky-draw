@@ -116,7 +116,6 @@ export default function RootLayout({
               margin: 0;
               padding: 0;
               overflow: hidden;
-              background-color: #061433;
               width: 100%;
               height: 100%;
             }
