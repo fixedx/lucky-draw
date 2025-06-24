@@ -120,7 +120,7 @@ export function exportToFile(participants: string[], winners: string[]): void {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-}
+        }
 
 // 从文本文件导入参与者
 export function importFromTextFile(file: File): Promise<string[]> {
@@ -136,7 +136,7 @@ export function importFromTextFile(file: File): Promise<string[]> {
                     .filter(line => line.length > 0);
 
                 resolve(lines);
-            } catch (error) {
+    } catch (error) {
                 reject(error);
             }
         };

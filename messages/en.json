@@ -135,7 +135,9 @@
     "usingCustomList": "Using custom list",
     "usingRandomList": "Using randomly generated list",
     "savedToLocal": "saved locally",
-    "peopleUnit": " people"
+    "peopleUnit": " people",
+    "reload": "Reload",
+    "welcomeMessage": "Click the \"Manage Participants\" button to start adding participants, or generate sample data to experience the lottery feature"
   },
   "Ball": {
     "title": "3D Sphere Draw",
@@ -200,6 +202,25 @@
     "medium": "Medium",
     "low": "Low",
     "fps": "FPS",
-    "rendering": "Rendering"
+    "rendering": "Rendering",
+    "help": "Help",
+    "manageParticipants": "Manage Participants",
+    "resetLottery": "Reset Lottery",
+    "settings": "Settings",
+    "noParticipantsAlert": "Please add participants first",
+    "drawingInProgress": "Drawing in progress...",
+    "helpFeatureComingSoon": "Help feature coming soon!",
+    "settingsFeatureComingSoon": "Settings feature coming soon!",
+    "confirmResetMessage": "Are you sure you want to reset? This will clear all current data.",
+    "selectFile": "Select File",
+    "importParticipantList": "Import Participant List",
+    "textFileSupport": "Only .txt format files are supported",
+    "noValidParticipants": "No valid participants found in file",
+    "importSuccessMessage": "Successfully imported {count} participants",
+    "importFailed": "Import failed, please check file format",
+    "participantNameEmpty": "Participant name cannot be empty",
+    "participantExists": "This participant already exists",
+    "noWinners": "No winners yet",
+    "generateSampleData": "Generated {count} sample participants"
   }
 }

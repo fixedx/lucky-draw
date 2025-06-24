@@ -1,13 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useLotteryStore } from "@/utils/lotteryStore";
+import { LotteryState } from "@/types/types";
 import ControlPanel from "@/components/ball/ControlPanel";
+import RightToolbar from "@/components/ball/RightToolbar";
 import DataManager from "@/components/ball/DataManager";
 import WinnerAnimation from "@/components/ball/WinnerAnimation";
-import { exportWinnersToTxt } from "@/utils/storageUtils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faKeyboard } from "@fortawesome/free-solid-svg-icons";
 
 // 动态导入3D场景组件以避免SSR问题
 const SphereScene = dynamic(() => import("@/components/3d/SphereScene"), {
@@ -23,13 +26,43 @@ const SphereScene = dynamic(() => import("@/components/3d/SphereScene"), {
   ),
 });
 
+// Shortcut display component
+function ShortcutDisplay() {
+  const t = useTranslations("Ball");
+  return (
+    <div className="fixed bottom-6 left-6 z-50 bg-black/50 text-white/80 p-3 rounded-lg shadow-xl backdrop-blur-sm text-xs">
+      <div className="flex items-center space-x-2 mb-1">
+        <FontAwesomeIcon icon={faKeyboard} />
+        <span className="font-semibold">{t("shortcutsTitle")}</span>
+      </div>
+      <ul className="space-y-0.5">
+        <li>
+          <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs">Space</kbd>
+          : {t("spaceKeyDesc")}
+        </li>
+        <li>
+          <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
+            Ctrl/Cmd+R
+          </kbd>
+          : {t("rKeyDesc")}
+        </li>
+        <li>
+          <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs">Esc</kbd>:{" "}
+          {t("escKeyDesc")}
+        </li>
+      </ul>
+    </div>
+  );
+}
+
 export default function BallLotteryPage() {
   const t = useTranslations("Ball");
   const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
-  const { participants, winners, loadFromStorage } = useLotteryStore();
+  const { participants, winners, loadFromStorage, resetLottery, state } =
+    useLotteryStore();
 
   // 确保只在客户端运行
   useEffect(() => {
@@ -77,16 +110,31 @@ export default function BallLotteryPage() {
     setIsDataManagerOpen(true);
   };
 
-  // 处理导出数据
-  const handleExport = () => {
-    if (winners.length === 0) {
-      alert("暂无中奖者数据可导出");
-      return;
+  const handleReset = useCallback(() => {
+    if (winners.length > 0 || participants.length > 0) {
+      const confirmed = confirm(t("confirmResetMessage"));
+      if (confirmed) {
+        resetLottery();
+      }
     }
+  }, [winners, participants, resetLottery, t]);
 
-    const winnerNames = winners.map((w) => w.name);
-    exportWinnersToTxt(winnerNames);
-  };
+  // Keyboard shortcut for Reset (Ctrl/Cmd + R)
+  useEffect(() => {
+    const handleGlobalKeyPress = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.code === "KeyR") {
+        event.preventDefault();
+        handleReset();
+      }
+      // Esc for fullscreen is handled by RightToolbar now or can be global here too
+      if (event.code === "Escape" && isFullscreen) {
+        event.preventDefault();
+        toggleFullscreen();
+      }
+    };
+    window.addEventListener("keydown", handleGlobalKeyPress);
+    return () => window.removeEventListener("keydown", handleGlobalKeyPress);
+  }, [handleReset, isFullscreen]); // Added isFullscreen dependency
 
   // WebGL支持检测
   const checkWebGLSupport = () => {
@@ -109,7 +157,7 @@ export default function BallLotteryPage() {
       <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
         <div className="text-center">
           <div className="animate-spin w-12 h-12 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
-          <div className="text-lg">初始化应用...</div>
+          <div className="text-lg">{t("initializingScene")}</div>
         </div>
       </div>
     );
@@ -126,7 +174,7 @@ export default function BallLotteryPage() {
             onClick={() => window.location.reload()}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors"
           >
-            重新加载
+            {t("reload")}
           </button>
         </div>
       </div>
@@ -173,12 +221,24 @@ export default function BallLotteryPage() {
       </div>
 
       {/* 控制面板 */}
-      <ControlPanel
+      <ControlPanel />
+
+      <RightToolbar
         onImport={handleImport}
-        onExport={handleExport}
         onToggleFullscreen={toggleFullscreen}
         isFullscreen={isFullscreen}
+        onReset={handleReset}
+        onHelp={() =>
+          alert(t("helpFeatureComingSoon") || "Help feature coming soon!")
+        }
+        onSettings={() =>
+          alert(
+            t("settingsFeatureComingSoon") || "Settings feature coming soon!"
+          )
+        }
       />
+
+      <ShortcutDisplay />
 
       {/* 数据管理器 */}
       <DataManager
@@ -190,21 +250,17 @@ export default function BallLotteryPage() {
       <WinnerAnimation />
 
       {/* 加载提示 */}
-      {participants.length === 0 && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/50 z-10">
+      {participants.length === 0 && state === LotteryState.IDLE && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-white text-center">
             <div className="text-4xl mb-4">🎲</div>
-            <h2 className="text-xl font-semibold mb-4">欢迎使用3D球体抽奖</h2>
-            <p className="text-gray-300 mb-6">
-              点击&ldquo;导入数据&rdquo;按钮开始添加参与者，
-              <br />
-              或者生成示例数据来体验抽奖功能
-            </p>
+            <h2 className="text-xl font-semibold mb-4">{t("title")}</h2>
+            <p className="text-gray-300 mb-6">{t("welcomeMessage")}</p>
             <button
               onClick={handleImport}
               className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors"
             >
-              开始使用
+              {t("manageParticipants")}
             </button>
           </div>
         </div>

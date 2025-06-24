@@ -200,6 +200,27 @@
     "medium": "中",
     "low": "低",
     "fps": "帧率",
-    "rendering": "渲染中"
+    "rendering": "渲染中",
+    "help": "帮助",
+    "manageParticipants": "管理参与者",
+    "resetLottery": "重置抽奖",
+    "settings": "设置",
+    "noParticipantsAlert": "请先添加参与者",
+    "drawingInProgress": "抽奖进行中...",
+    "helpFeatureComingSoon": "帮助功能即将推出！",
+    "settingsFeatureComingSoon": "设置功能即将推出！",
+    "confirmResetMessage": "确定要重置吗？这将清除所有当前数据。",
+    "selectFile": "选择文件",
+    "importParticipantList": "导入参与者名单",
+    "textFileSupport": "只支持 .txt 格式文件",
+    "noValidParticipants": "文件中没有找到有效的参与者名单",
+    "importSuccessMessage": "成功导入 {count} 位参与者",
+    "importFailed": "导入失败，请检查文件格式",
+    "participantNameEmpty": "参与者名称不能为空",
+    "participantExists": "该参与者已存在",
+    "noWinners": "暂无中奖者",
+    "generateSampleData": "已生成 {count} 位示例参与者",
+    "reload": "重新加载",
+    "welcomeMessage": "点击“管理参与者”按钮开始添加参与者，或者生成示例数据来体验抽奖功能"
   }
 }

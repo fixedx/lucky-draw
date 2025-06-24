@@ -69,7 +69,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
   // 处理文件导入
   const handleFileImport = async (file: File) => {
     if (!file.name.toLowerCase().endsWith(".txt")) {
-      alert("只支持 .txt 格式文件");
+      alert(t("textFileSupport"));
       return;
     }
 
@@ -79,15 +79,15 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
       const names = await importFromTextFile(file);
 
       if (names.length === 0) {
-        alert("文件中没有找到有效的参与者名单");
+        alert(t("noValidParticipants"));
         return;
       }
 
       setParticipants(names);
-      alert(`成功导入 ${names.length} 位参与者`);
+      alert(t("importSuccessMessage", { count: names.length }));
     } catch (error) {
       console.error("Import error:", error);
-      alert("导入失败，请检查文件格式");
+      alert(t("importFailed"));
     } finally {
       setIsProcessing(false);
     }
@@ -102,12 +102,12 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
   const handleAddParticipant = () => {
     const name = newParticipantName.trim();
     if (!name) {
-      alert("参与者名称不能为空");
+      alert(t("participantNameEmpty"));
       return;
     }
 
     if (participants.some((p) => p.name === name)) {
-      alert("该参与者已存在");
+      alert(t("participantExists"));
       return;
     }
 
@@ -125,12 +125,12 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
   const saveEdit = () => {
     const name = editingName.trim();
     if (!name) {
-      alert("参与者名称不能为空");
+      alert(t("participantNameEmpty"));
       return;
     }
 
     if (participants.some((p) => p.name === name && p.id !== editingId)) {
-      alert("该参与者已存在");
+      alert(t("participantExists"));
       return;
     }
 
@@ -161,7 +161,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
   // 导出中奖名单
   const handleExportWinners = () => {
     if (winners.length === 0) {
-      alert("暂无中奖者");
+      alert(t("noWinners"));
       return;
     }
 
@@ -173,7 +173,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
   const generateSampleData = () => {
     const sampleNames = PRESET_PARTICIPANT_LISTS.medium();
     setParticipants(sampleNames);
-    alert(`已生成 ${sampleNames.length} 位示例参与者`);
+    alert(t("generateSampleData", { count: sampleNames.length }));
   };
 
   return (
@@ -207,7 +207,9 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
               {/* 文件导入区域 */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4">导入参与者名单</h3>
+                <h3 className="text-lg font-semibold mb-4">
+                  {t("importParticipantList")}
+                </h3>
                 <div
                   className={`
                     relative border-2 border-dashed rounded-lg p-8 text-center transition-colors
@@ -264,7 +266,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                         className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
                       >
                         <FontAwesomeIcon icon={faUpload} className="mr-2" />
-                        选择文件
+                        {t("selectFile")}
                       </button>
                     </div>
                   )}
