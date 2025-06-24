@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect, useMemo, Suspense } from "react";
+import React, { useRef, useEffect, useMemo, Suspense, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Text } from "@react-three/drei";
 import * as THREE from "three";
@@ -36,7 +36,17 @@ function TextOverlay({
   spherePoints: { position: THREE.Vector3; normal: THREE.Vector3 }[];
 }) {
   // 可以显示更多参与者，因为Three.js Text性能更好
-  const maxVisible = Math.min(participants?.length || 0, 500);
+  const maxVisible = Math.min(participants?.length || 0, 1500);
+
+  // 闪烁状态管理 - 每个文字的闪烁状态
+  const [flashStates, setFlashStates] = useState<{
+    [key: number]: {
+      isFlashing: boolean;
+      intensity: number;
+      nextFlashTime: number;
+      flashDuration: number;
+    };
+  }>({});
 
   // 如果参与者很多，均匀选择要显示的参与者索引
   const selectedIndices = useMemo(() => {
@@ -77,6 +87,56 @@ function TextOverlay({
     return result;
   }, [participants, spherePoints, maxVisible]);
 
+  // 初始化闪烁状态
+  useEffect(() => {
+    const newFlashStates: typeof flashStates = {};
+    selectedIndices.forEach((index) => {
+      newFlashStates[index] = {
+        isFlashing: false,
+        intensity: 0,
+        nextFlashTime: Math.random() * 3000, // 0-3秒内随机开始闪烁
+        flashDuration: 200 + Math.random() * 300, // 200-500ms的闪烁持续时间
+      };
+    });
+    setFlashStates(newFlashStates);
+  }, [selectedIndices]);
+
+  // 闪烁动画逻辑
+  useFrame((state) => {
+    const currentTime = state.clock.elapsedTime * 1000; // 转换为毫秒
+
+    setFlashStates((prev) => {
+      const newStates = { ...prev };
+
+      selectedIndices.forEach((index) => {
+        const flashState = newStates[index];
+        if (!flashState) return;
+
+        // 检查是否应该开始闪烁
+        if (!flashState.isFlashing && currentTime >= flashState.nextFlashTime) {
+          flashState.isFlashing = true;
+          flashState.intensity = 1;
+        }
+
+        // 处理KTV灯球式闪烁过程
+        if (flashState.isFlashing) {
+          // 快速衰减，像灯泡快速闪烁
+          flashState.intensity = Math.max(0, flashState.intensity - 0.08);
+
+          // 闪烁结束，设置下次闪烁时间
+          if (flashState.intensity <= 0) {
+            flashState.isFlashing = false;
+            // 随机间隔：0.5-2秒，更频繁的闪烁
+            flashState.nextFlashTime = currentTime + 500 + Math.random() * 1500;
+            flashState.flashDuration = 150 + Math.random() * 200;
+          }
+        }
+      });
+
+      return newStates;
+    });
+  });
+
   if (!participants || participants.length === 0 || !spherePoints) return null;
 
   return (
@@ -107,21 +167,36 @@ function TextOverlay({
         const euler = new THREE.Euler();
         euler.setFromRotationMatrix(lookAtMatrix);
 
+        // 获取当前文字的闪烁状态
+        const flashState = flashStates[participantIndex];
+        const isFlashing = flashState?.isFlashing || false;
+        const flashIntensity = flashState?.intensity || 0;
+
+        // 根据闪烁状态调整颜色和发光效果
+        const baseColor = "#F1F5F9";
+        const flashColor = "#FFD700"; // 金色闪烁
+        const currentColor = isFlashing
+          ? `rgb(${255}, ${215 + 40 * flashIntensity}, ${flashIntensity * 255})`
+          : baseColor;
+
         return (
           <Text
             key={participant.id || participantIndex}
             position={[textPosition.x, textPosition.y, textPosition.z]}
             rotation={[euler.x, euler.y, euler.z]}
             fontSize={0.06}
-            color="#F1F5F9" // 淡灰色，与深色背景形成良好对比
+            color={currentColor}
             anchorX="center"
             anchorY="middle"
             outlineWidth={0.003}
-            outlineColor="#1E3A8A" // 深蓝色描边，与球体颜色呼应
+            outlineColor={isFlashing ? "#FFD700" : "#1E3A8A"} // 闪烁时描边也变为金色
             maxWidth={1.2}
             textAlign="center"
             // 让文字完全平贴在表面
             renderOrder={1}
+            // 添加发光效果
+            material-emissive={isFlashing ? flashColor : "#000000"}
+            material-emissiveIntensity={flashIntensity * 0.5}
           >
             {participant.name}
           </Text>
