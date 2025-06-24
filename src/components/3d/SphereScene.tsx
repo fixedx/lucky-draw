@@ -113,11 +113,11 @@ function TextOverlay({
             position={[textPosition.x, textPosition.y, textPosition.z]}
             rotation={[euler.x, euler.y, euler.z]}
             fontSize={0.06}
-            color="#FFFFFF"
+            color="#F1F5F9" // 淡灰色，与深色背景形成良好对比
             anchorX="center"
             anchorY="middle"
-            outlineWidth={0.002}
-            outlineColor="#000000"
+            outlineWidth={0.003}
+            outlineColor="#1E3A8A" // 深蓝色描边，与球体颜色呼应
             maxWidth={1.2}
             textAlign="center"
             // 让文字完全平贴在表面
@@ -160,14 +160,12 @@ function Sphere({
 
   useFrame(() => {
     if (sphereGroupRef.current) {
-      const rotationYFactor = isSpinning ? animationSpeed * 0.02 : 0.003;
-      const rotationXFactor = isSpinning ? animationSpeed * 0.005 : 0.0015;
+      // 只围绕Y轴旋转，不做不规则旋转
+      const rotationYFactor = isSpinning ? animationSpeed * 0.05 : 0.008; // 抽奖时加快旋转速度
       sphereGroupRef.current.rotation.y += rotationYFactor;
-      sphereGroupRef.current.rotation.x += rotationXFactor;
+      // 移除X轴旋转，保持稳定的Y轴旋转
     }
-    if (physicalSphereRef.current) {
-      physicalSphereRef.current.rotation.y += 0.0005;
-    }
+    // 移除球体本身的额外旋转，避免重复旋转
   });
 
   /* // Commented out useEffect for highlighting as it's not used
@@ -201,9 +199,11 @@ function Sphere({
       <mesh ref={physicalSphereRef}>
         <sphereGeometry args={[SPHERE_RADIUS, 48, 48]} />
         <meshStandardMaterial
-          color="#E0E0E0" // Light grey / silver
-          metalness={0.6}
-          roughness={0.4}
+          color="#2563EB" // 深蓝色，与页面背景的blue-900呼应
+          metalness={0.7}
+          roughness={0.2}
+          emissive="#1E3A8A" // 添加轻微的蓝色发光效果
+          emissiveIntensity={0.1}
         />
       </mesh>
 
@@ -214,7 +214,7 @@ function Sphere({
         <Text
           position={[0, -SPHERE_RADIUS - 0.6, 0]}
           fontSize={0.12}
-          color="#B0BEC5"
+          color="#94A3B8" // 更柔和的灰色，与整体色调搭配
         >
           {`共 ${participants.length} 名参与者`}
         </Text>
