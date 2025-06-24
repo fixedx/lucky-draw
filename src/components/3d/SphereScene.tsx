@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useEffect, useMemo, Suspense, useState } from "react";
+import React, { useRef, useEffect, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, Text, Html } from "@react-three/drei";
+import { OrbitControls, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useLotteryStore } from "@/utils/lotteryStore";
 import { LotteryState, type Participant } from "@/types/types";
@@ -27,20 +27,21 @@ const PARTICIPANT_COLORS = [
 ];
 */
 
-// HTML Overlay 组件 - 显示参与者名字标签
-function HTMLOverlay({
+// 3D Text Overlay 组件 - 使用Three.js直接渲染文字，性能更好
+function TextOverlay({
   participants,
   spherePoints,
 }: {
   participants: Participant[];
   spherePoints: { position: THREE.Vector3; normal: THREE.Vector3 }[];
 }) {
-  if (!participants || participants.length === 0 || !spherePoints) return null;
+  // 可以显示更多参与者，因为Three.js Text性能更好
+  const maxVisible = Math.min(participants?.length || 0, 500);
 
-  // 显示所有参与者，最多50个以保证性能
-  const maxVisible = Math.min(participants.length, 500);
   // 如果参与者很多，均匀选择要显示的参与者索引
   const selectedIndices = useMemo(() => {
+    if (!participants || participants.length === 0 || !spherePoints) return [];
+
     if (participants.length <= maxVisible) {
       return Array.from({ length: participants.length }, (_, i) => i);
     }
@@ -68,14 +69,15 @@ function HTMLOverlay({
     // 确保索引按顺序排列
     const result = indices.sort((a, b) => a - b).slice(0, maxVisible);
 
-    // 临时调试信息
     console.log(
       `显示参与者分布: 总数${participants.length}, 显示${result.length}个, 索引:`,
       result
     );
 
     return result;
-  }, [participants.length, maxVisible]);
+  }, [participants, spherePoints, maxVisible]);
+
+  if (!participants || participants.length === 0 || !spherePoints) return null;
 
   return (
     <>
@@ -84,51 +86,48 @@ function HTMLOverlay({
         const participant = participants[participantIndex];
         if (!participant || !point) return null;
 
-        // 让标签贴在球体表面
-        const surfacePosition = point.position
+        // 让文字完全贴在球体表面，像用笔写在球面上
+        const textPosition = point.position
           .clone()
-          .add(point.normal.clone().multiplyScalar(0.05));
+          .add(point.normal.clone().multiplyScalar(0.01));
+
+        // 计算文字的朝向，让它完全贴合球面切线
+        const up = new THREE.Vector3(0, 1, 0);
+        const tangent = up.clone().cross(point.normal).normalize();
+        const bitangent = point.normal.clone().cross(tangent).normalize();
+
+        // 创建一个看向球心的朝向矩阵
+        const lookAtMatrix = new THREE.Matrix4();
+        lookAtMatrix.lookAt(
+          textPosition,
+          new THREE.Vector3(0, 0, 0), // 球心
+          bitangent
+        );
+
+        const euler = new THREE.Euler();
+        euler.setFromRotationMatrix(lookAtMatrix);
 
         return (
-          <Html
+          <Text
             key={participant.id || participantIndex}
-            position={[surfacePosition.x, surfacePosition.y, surfacePosition.z]}
-            distanceFactor={4}
-            occlude={true}
-            transform={true}
-            sprite={true}
-            center={true}
+            position={[textPosition.x, textPosition.y, textPosition.z]}
+            rotation={[euler.x, euler.y, euler.z]}
+            fontSize={0.06}
+            color="#FFFFFF"
+            anchorX="center"
+            anchorY="middle"
+            outlineWidth={0.002}
+            outlineColor="#000000"
+            maxWidth={1.2}
+            textAlign="center"
+            // 让文字完全平贴在表面
+            renderOrder={1}
           >
-            <div
-              className="text-white text-xs font-medium bg-black/90 px-1.5 py-0.5 rounded shadow-lg"
-              style={{
-                fontSize: "11px",
-                textAlign: "center",
-                border: "1px solid rgba(255,255,255,0.3)",
-                backdropFilter: "blur(4px)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {participant.name}
-            </div>
-          </Html>
+            {participant.name}
+          </Text>
         );
       })}
     </>
-  );
-}
-
-function ParticipantText({
-  participant,
-  position,
-  normal,
-}: ParticipantTextProps) {
-  // 使用简单的球体标记，文字由HTML overlay显示
-  return (
-    <mesh position={[position.x, position.y, position.z]}>
-      <sphereGeometry args={[0.05, 8, 8]} />
-      <meshStandardMaterial color="orange" />
-    </mesh>
   );
 }
 
@@ -156,7 +155,6 @@ function Sphere({
 
   const visibleParticipantIndices = useMemo(() => {
     if (!participants || participants.length === 0) return [];
-    // 显示所有参与者的索引，不限制数量
     return participants.map((_, i) => i);
   }, [participants]);
 
@@ -209,25 +207,8 @@ function Sphere({
         />
       </mesh>
 
-      {/* HTML标签 - 跟随球体旋转 */}
-      <HTMLOverlay participants={participants} spherePoints={spherePoints} />
-
-      {visibleParticipantIndices.map((originalIndex) => {
-        const participant = participants[originalIndex];
-        const point = spherePoints[originalIndex];
-
-        if (!participant || !point || !point.position || !point.normal) {
-          return null;
-        }
-        return (
-          <ParticipantText
-            key={participant.id || originalIndex}
-            participant={participant}
-            position={point.position}
-            normal={point.normal}
-          />
-        );
-      })}
+      {/* 3D文字标签 - 跟随球体旋转 */}
+      <TextOverlay participants={participants} spherePoints={spherePoints} />
 
       {participants.length > 0 && (
         <Text
