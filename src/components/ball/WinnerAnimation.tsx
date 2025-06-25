@@ -140,81 +140,18 @@ function WinnerCard({
 }) {
   const t = useTranslations("Ball");
 
-  // 根据中奖人数智能确定列数，优先多列布局
   const getLayoutConfig = (count: number) => {
     if (count === 1) {
       return {
-        cols: 1,
         maxWidth: "max-w-md",
-        gridCols: "grid-cols-1",
-        needsScroll: false,
+        useFlex: false, // 单人用特殊布局
       };
     }
 
-    // 优先增加列数，充分利用屏幕宽度
-    if (count <= 2)
-      return {
-        cols: 2,
-        maxWidth: "max-w-xl",
-        gridCols: "grid-cols-2",
-        needsScroll: false,
-      };
-    if (count <= 6)
-      return {
-        cols: 3,
-        maxWidth: "max-w-2xl",
-        gridCols: "grid-cols-3",
-        needsScroll: false,
-      };
-    if (count <= 12)
-      return {
-        cols: 6,
-        maxWidth: "max-w-4xl",
-        gridCols: "grid-cols-6",
-        needsScroll: false,
-      };
-    if (count <= 20)
-      return {
-        cols: 10,
-        maxWidth: "max-w-6xl",
-        gridCols: "grid-cols-10",
-        needsScroll: false,
-      };
-    if (count <= 30)
-      return {
-        cols: 15,
-        maxWidth: "max-w-[85vw]",
-        gridCols: "grid-cols-15",
-        needsScroll: false,
-      };
-    if (count <= 40)
-      return {
-        cols: 20,
-        maxWidth: "max-w-[90vw]",
-        gridCols: "grid-cols-20",
-        needsScroll: false,
-      };
-    if (count <= 60)
-      return {
-        cols: 20,
-        maxWidth: "max-w-[95vw]",
-        gridCols: "grid-cols-20",
-        needsScroll: false,
-      };
-    if (count <= 100)
-      return {
-        cols: 20,
-        maxWidth: "max-w-[95vw]",
-        gridCols: "grid-cols-20",
-        needsScroll: false,
-      };
-
-    // 超过100人才出现滚动
+    // 多人用flex布局，自动换行
     return {
-      cols: 20,
-      maxWidth: "max-w-[95vw]",
-      gridCols: "grid-cols-20",
-      needsScroll: true,
+      maxWidth: "max-w-[90vw]", // 使用更宽的容器
+      useFlex: true,
     };
   };
 
@@ -268,7 +205,11 @@ function WinnerCard({
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.5, type: "spring" }}
-        className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-4 flex-1 overflow-y-auto min-h-0"
+        className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-4 flex-1 overflow-y-auto min-h-0 custom-scrollbar"
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: "rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)",
+        }}
       >
         <div className="text-lg text-white/80 mb-4">{t("winner")}</div>
 
@@ -278,20 +219,20 @@ function WinnerCard({
             {winners[0].name}
           </div>
         ) : (
-          // 多个获奖者 - 网格显示
-          <div className={`grid ${layoutConfig.gridCols} gap-3`}>
+          // 多个获奖者 - flex布局自动换行
+          <div className="flex flex-wrap gap-3 justify-center">
             {winners.map((winner, index) => (
               <motion.div
                 key={`${winner.name}-${index}`}
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{
-                  delay: 0.8 + index * 0.05, // 减少延迟，避免动画过长
+                  delay: 0.8 + index * 0.02, // 减少延迟避免动画过长
                   duration: 0.3,
                   type: "spring",
                   stiffness: 300,
                 }}
-                className="bg-white/10 rounded-lg p-3 text-center hover:bg-white/20 transition-colors border border-white/10"
+                className="bg-white/10 rounded-lg p-3 text-center hover:bg-white/20 transition-colors border border-white/10 w-24 flex-shrink-0"
               >
                 {/* 编号 */}
                 <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xs mx-auto mb-2">
