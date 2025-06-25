@@ -10,6 +10,7 @@ import {
   faUsers,
   faRotateRight,
   faCog,
+  faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLotteryStore } from "@/utils/lotteryStore";
 import { useTranslations } from "next-intl";
@@ -22,6 +23,7 @@ interface RightToolbarProps {
   // Placeholder functions for new buttons
   onHelp: () => void;
   onSettings: () => void;
+  onShowResults: () => void;
 }
 
 const iconButtonClasses =
@@ -35,9 +37,10 @@ export default function RightToolbar({
   onReset,
   onHelp,
   onSettings,
+  onShowResults,
 }: RightToolbarProps) {
   const t = useTranslations("Ball"); // Or a more general namespace if needed
-  const { winners } = useLotteryStore(); // To disable reset if no winners, etc.
+  const { winners, currentRoundWinners } = useLotteryStore(); // To disable reset if no winners, etc.
 
   const toolbarVariants = {
     hidden: { opacity: 0, x: 100 },
@@ -126,11 +129,30 @@ export default function RightToolbar({
         <FontAwesomeIcon icon={faRotateRight} size={iconSize} />
       </motion.button>
 
+      {/* Results Button */}
+      <motion.button
+        variants={itemVariants}
+        onClick={onShowResults}
+        className={`${iconButtonClasses} bg-gradient-to-br from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 relative`}
+        aria-label="查看结果"
+        title="查看中奖结果"
+      >
+        <FontAwesomeIcon icon={faTrophy} size={iconSize} />
+        {/* 红点提示 */}
+        {currentRoundWinners.length > 0 && (
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+            <span className="text-white text-xs font-bold">
+              {currentRoundWinners.length}
+            </span>
+          </div>
+        )}
+      </motion.button>
+
       {/* Settings Button */}
       <motion.button
         variants={itemVariants}
         onClick={onSettings}
-        className={`${iconButtonClasses} bg-gradient-to-br from-gray-500 to-blue-gray-600 hover:from-gray-600 hover:to-blue-gray-700`}
+        className={`${iconButtonClasses} bg-gradient-to-br from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700`}
         aria-label={t("settings") || "Settings"}
         title={t("settings") || "Settings"}
       >

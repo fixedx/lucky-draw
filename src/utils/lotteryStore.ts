@@ -2,6 +2,25 @@ import { create } from 'zustand';
 import { LotteryState, type Participant, type LotteryStatus, type AnimationConfig } from '@/types/types';
 import { getStoredParticipants, getStoredWinners, saveParticipants, saveWinners, addWinner } from './storageUtils';
 
+// 抽奖设置接口
+export interface LotterySettings {
+    pageTitle: string;
+    prizeType: string; // 一等奖、二等奖等
+    winnerCount: number; // 中奖人数
+    removeWinnersFromPool: boolean; // 中奖后是否移除
+}
+
+// 默认设置
+const defaultSettings: LotterySettings = {
+    pageTitle: '幸运大抽奖',
+    prizeType: '幸运奖',
+    winnerCount: 1,
+    removeWinnersFromPool: true,
+};
+
+// 存储设置的key
+const SETTINGS_STORAGE_KEY = 'lottery_settings';
+
 interface LotteryStore extends LotteryStatus {
     // 动作方法
     setParticipants: (participants: string[]) => void;
@@ -16,6 +35,17 @@ interface LotteryStore extends LotteryStatus {
     // 动画配置
     animationConfig: AnimationConfig;
     setAnimationConfig: (config: Partial<AnimationConfig>) => void;
+
+    // 抽奖设置
+    settings: LotterySettings;
+    setSettings: (settings: Partial<LotterySettings>) => void;
+    loadSettings: () => void;
+    saveSettings: () => void;
+
+    // 当前轮次的中奖记录（包含奖项信息）
+    currentRoundWinners: Array<Participant & { prizeType: string; roundTime: number }>;
+    addCurrentRoundWinner: (winner: Participant, prizeType: string) => void;
+    clearCurrentRound: () => void;
 }
 
 const defaultAnimationConfig: AnimationConfig = {
@@ -38,6 +68,26 @@ function createParticipantsFromNames(names: string[]): Participant[] {
     }));
 }
 
+// 设置存储工具函数
+function getStoredSettings(): LotterySettings {
+    if (typeof window === 'undefined') return defaultSettings;
+    try {
+        const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
+        return stored ? { ...defaultSettings, ...JSON.parse(stored) } : defaultSettings;
+    } catch {
+        return defaultSettings;
+    }
+}
+
+function saveSettingsToStorage(settings: LotterySettings): void {
+    if (typeof window === 'undefined') return;
+    try {
+        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+    } catch (error) {
+        console.error('Failed to save settings:', error);
+    }
+}
+
 export const useLotteryStore = create<LotteryStore>((set, get) => ({
     // 初始状态
     state: LotteryState.IDLE,
@@ -47,6 +97,8 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
     isSpinning: false,
     animationSpeed: 1.0,
     animationConfig: defaultAnimationConfig,
+    settings: defaultSettings,
+    currentRoundWinners: [],
 
     // 设置参与者列表
     setParticipants: (names: string[]) => {
@@ -110,31 +162,63 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
     // 停止抽奖
     stopDrawing: () => {
-        const { participants, winners } = get();
+        const { participants, winners, settings } = get();
 
         // 获取可用的参与者
-        const availableParticipants = participants.filter(
-            p => !winners.some(w => w.name === p.name)
-        );
+        let availableParticipants = participants;
+
+        // 如果设置了移除中奖者，则过滤掉已中奖的
+        if (settings.removeWinnersFromPool) {
+            availableParticipants = participants.filter(
+                p => !winners.some(w => w.name === p.name)
+            );
+        }
 
         if (availableParticipants.length === 0) {
             set({ state: LotteryState.IDLE, isSpinning: false });
             return;
         }
 
-        // 随机选择一个获奖者
-        const randomIndex = Math.floor(Math.random() * availableParticipants.length);
-        const winner = availableParticipants[randomIndex];
+        // 根据设置的中奖人数随机选择获奖者
+        const winnerCount = Math.min(settings.winnerCount, availableParticipants.length);
+        const selectedWinners: Participant[] = [];
+        const shuffled = [...availableParticipants].sort(() => Math.random() - 0.5);
+
+        for (let i = 0; i < winnerCount; i++) {
+            selectedWinners.push(shuffled[i]);
+        }
+
+        // 如果只有一个获奖者，设置为当前获奖者
+        const mainWinner = selectedWinners[0];
 
         set({
             state: LotteryState.ANIMATING,
             isSpinning: false,
-            currentWinner: winner,
+            currentWinner: mainWinner,
         });
 
         // 延迟执行最终选中
         setTimeout(() => {
-            get().selectWinner(winner);
+            const { settings: currentSettings, winners } = get();
+
+            // 批量添加获奖者到winners列表
+            const newWinners = [...winners, ...selectedWinners];
+            const winnerNames = newWinners.map(w => w.name);
+            saveWinners(winnerNames);
+
+            // 批量添加到当前轮次记录
+            selectedWinners.forEach(winner => {
+                get().addCurrentRoundWinner(winner, currentSettings.prizeType);
+                addWinner(winner.name);
+            });
+
+            // 更新状态
+            set({
+                state: LotteryState.WINNER_SELECTED,
+                winners: newWinners,
+                currentWinner: selectedWinners[0], // 显示第一个获奖者作为主要获奖者
+                isSpinning: false,
+            });
         }, get().animationConfig.winnerAnimationDuration);
     },
 
@@ -202,5 +286,40 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
         set({
             animationConfig: { ...animationConfig, ...config },
         });
+    },
+
+    // 设置相关方法
+    setSettings: (newSettings: Partial<LotterySettings>) => {
+        const currentSettings = get().settings;
+        const updatedSettings = { ...currentSettings, ...newSettings };
+        set({ settings: updatedSettings });
+        saveSettingsToStorage(updatedSettings);
+    },
+
+    loadSettings: () => {
+        const settings = getStoredSettings();
+        set({ settings });
+    },
+
+    saveSettings: () => {
+        const { settings } = get();
+        saveSettingsToStorage(settings);
+    },
+
+    // 当前轮次中奖记录相关方法
+    addCurrentRoundWinner: (winner: Participant, prizeType: string) => {
+        const { currentRoundWinners } = get();
+        const newWinner = {
+            ...winner,
+            prizeType,
+            roundTime: Date.now(),
+        };
+        set({
+            currentRoundWinners: [...currentRoundWinners, newWinner],
+        });
+    },
+
+    clearCurrentRound: () => {
+        set({ currentRoundWinners: [] });
     },
 })); 

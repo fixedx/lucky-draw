@@ -9,6 +9,8 @@ import ControlPanel from "@/components/ball/ControlPanel";
 import RightToolbar from "@/components/ball/RightToolbar";
 import DataManager from "@/components/ball/DataManager";
 import WinnerAnimation from "@/components/ball/WinnerAnimation";
+import SettingsModal from "@/components/ball/SettingsModal";
+import WinnerResultsModal from "@/components/ball/WinnerResultsModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKeyboard } from "@fortawesome/free-solid-svg-icons";
 
@@ -60,15 +62,25 @@ export default function BallLotteryPage() {
   const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isResultsOpen, setIsResultsOpen] = useState(false);
 
-  const { participants, winners, loadFromStorage, resetLottery, state } =
-    useLotteryStore();
+  const {
+    participants,
+    winners,
+    loadFromStorage,
+    resetLottery,
+    state,
+    settings,
+    loadSettings,
+  } = useLotteryStore();
 
   // 确保只在客户端运行
   useEffect(() => {
     setIsClient(true);
     loadFromStorage();
-  }, [loadFromStorage]);
+    loadSettings();
+  }, []); // 移除依赖项，只在组件挂载时执行一次
 
   // 处理全屏切换
   const toggleFullscreen = () => {
@@ -191,7 +203,9 @@ export default function BallLotteryPage() {
       {/* 页面标题和描述 - 仅在非全屏模式显示 */}
       {!isFullscreen && (
         <div className="absolute top-4 left-4 z-30 text-white">
-          <h1 className="text-2xl font-bold mb-2">{t("title")}</h1>
+          <h1 className="text-2xl font-bold mb-2">
+            {settings.pageTitle || t("title")}
+          </h1>
           <p className="text-sm text-gray-300 max-w-md">{t("description")}</p>
         </div>
       )}
@@ -231,11 +245,8 @@ export default function BallLotteryPage() {
         onHelp={() =>
           alert(t("helpFeatureComingSoon") || "Help feature coming soon!")
         }
-        onSettings={() =>
-          alert(
-            t("settingsFeatureComingSoon") || "Settings feature coming soon!"
-          )
-        }
+        onSettings={() => setIsSettingsOpen(true)}
+        onShowResults={() => setIsResultsOpen(true)}
       />
 
       <ShortcutDisplay />
@@ -246,6 +257,18 @@ export default function BallLotteryPage() {
         onClose={() => setIsDataManagerOpen(false)}
       />
 
+      {/* 设置弹窗 */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+
+      {/* 中奖结果弹窗 */}
+      <WinnerResultsModal
+        isOpen={isResultsOpen}
+        onClose={() => setIsResultsOpen(false)}
+      />
+
       {/* 中奖动画 */}
       <WinnerAnimation />
 
@@ -254,7 +277,9 @@ export default function BallLotteryPage() {
         <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-white text-center">
             <div className="text-4xl mb-4">🎲</div>
-            <h2 className="text-xl font-semibold mb-4">{t("title")}</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              {settings.pageTitle || t("title")}
+            </h2>
             <p className="text-gray-300 mb-6">{t("welcomeMessage")}</p>
             <button
               onClick={handleImport}

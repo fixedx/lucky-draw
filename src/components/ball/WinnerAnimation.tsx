@@ -130,13 +130,95 @@ function FireworksEffect() {
 }
 
 function WinnerCard({
-  winner,
+  winners,
+  prizeType,
   onClose,
 }: {
-  winner: string;
+  winners: Array<{ name: string; prizeType: string }>;
+  prizeType: string;
   onClose: () => void;
 }) {
   const t = useTranslations("Ball");
+
+  // 根据中奖人数智能确定列数，优先多列布局
+  const getLayoutConfig = (count: number) => {
+    if (count === 1) {
+      return {
+        cols: 1,
+        maxWidth: "max-w-md",
+        gridCols: "grid-cols-1",
+        needsScroll: false,
+      };
+    }
+
+    // 优先增加列数，充分利用屏幕宽度
+    if (count <= 2)
+      return {
+        cols: 2,
+        maxWidth: "max-w-xl",
+        gridCols: "grid-cols-2",
+        needsScroll: false,
+      };
+    if (count <= 6)
+      return {
+        cols: 3,
+        maxWidth: "max-w-2xl",
+        gridCols: "grid-cols-3",
+        needsScroll: false,
+      };
+    if (count <= 12)
+      return {
+        cols: 6,
+        maxWidth: "max-w-4xl",
+        gridCols: "grid-cols-6",
+        needsScroll: false,
+      };
+    if (count <= 20)
+      return {
+        cols: 10,
+        maxWidth: "max-w-6xl",
+        gridCols: "grid-cols-10",
+        needsScroll: false,
+      };
+    if (count <= 30)
+      return {
+        cols: 15,
+        maxWidth: "max-w-[85vw]",
+        gridCols: "grid-cols-15",
+        needsScroll: false,
+      };
+    if (count <= 40)
+      return {
+        cols: 20,
+        maxWidth: "max-w-[90vw]",
+        gridCols: "grid-cols-20",
+        needsScroll: false,
+      };
+    if (count <= 60)
+      return {
+        cols: 20,
+        maxWidth: "max-w-[95vw]",
+        gridCols: "grid-cols-20",
+        needsScroll: false,
+      };
+    if (count <= 100)
+      return {
+        cols: 20,
+        maxWidth: "max-w-[95vw]",
+        gridCols: "grid-cols-20",
+        needsScroll: false,
+      };
+
+    // 超过100人才出现滚动
+    return {
+      cols: 20,
+      maxWidth: "max-w-[95vw]",
+      gridCols: "grid-cols-20",
+      needsScroll: true,
+    };
+  };
+
+  const layoutConfig = getLayoutConfig(winners.length);
 
   return (
     <motion.div
@@ -149,7 +231,7 @@ function WinnerCard({
         damping: 15,
         duration: 0.8,
       }}
-      className="bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 p-8 rounded-3xl shadow-2xl text-center max-w-md mx-auto"
+      className={`bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 p-6 rounded-3xl shadow-2xl text-center ${layoutConfig.maxWidth} mx-auto max-h-[85vh] overflow-hidden flex flex-col`}
     >
       {/* 奖杯图标 */}
       <motion.div
@@ -171,41 +253,87 @@ function WinnerCard({
         {t("congratulations")}
       </motion.h2>
 
-      {/* 获奖者名字 */}
+      {/* 奖项信息 */}
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.6, duration: 0.5 }}
+        className="text-xl text-white/90 mb-4 font-semibold"
+      >
+        {prizeType} • {winners.length}人中奖
+      </motion.div>
+
+      {/* 获奖者名单 */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.5, type: "spring" }}
-        className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-6"
+        className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-4 flex-1 overflow-y-auto min-h-0"
       >
-        <div className="text-lg text-white/80 mb-2">{t("winner")}</div>
-        <div className="text-4xl font-bold text-white drop-shadow-lg break-words">
-          {winner}
-        </div>
+        <div className="text-lg text-white/80 mb-4">{t("winner")}</div>
+
+        {winners.length === 1 ? (
+          // 单个获奖者 - 大字显示
+          <div className="text-4xl font-bold text-white drop-shadow-lg break-words">
+            {winners[0].name}
+          </div>
+        ) : (
+          // 多个获奖者 - 网格显示
+          <div className={`grid ${layoutConfig.gridCols} gap-3`}>
+            {winners.map((winner, index) => (
+              <motion.div
+                key={`${winner.name}-${index}`}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{
+                  delay: 0.8 + index * 0.05, // 减少延迟，避免动画过长
+                  duration: 0.3,
+                  type: "spring",
+                  stiffness: 300,
+                }}
+                className="bg-white/10 rounded-lg p-3 text-center hover:bg-white/20 transition-colors border border-white/10"
+              >
+                {/* 编号 */}
+                <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xs mx-auto mb-2">
+                  {index + 1}
+                </div>
+                {/* 名字 */}
+                <div className="text-white font-medium text-sm leading-tight break-words px-1">
+                  {winner.name}
+                </div>
+                {/* 奖杯图标 */}
+                <div className="text-yellow-300 text-lg mt-1">🏆</div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </motion.div>
 
-      {/* 装饰星星 */}
-      <motion.div
-        initial={{ rotate: 0 }}
-        animate={{ rotate: 360 }}
-        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-        className="text-2xl mb-4"
-      >
-        ✨ ⭐ ✨ ⭐ ✨
-      </motion.div>
+      {/* 底部固定区域 */}
+      <div className="flex-shrink-0">
+        {/* 装饰星星 */}
+        <motion.div
+          initial={{ rotate: 0 }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="text-2xl mb-4"
+        >
+          ✨ ⭐ ✨ ⭐ ✨
+        </motion.div>
 
-      {/* 关闭按钮 */}
-      <motion.button
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={onClose}
-        className="bg-white text-orange-500 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-      >
-        确认
-      </motion.button>
+        {/* 关闭按钮 */}
+        <motion.button
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onClose}
+          className="bg-white text-orange-500 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          确认
+        </motion.button>
+      </div>
     </motion.div>
   );
 }
@@ -245,11 +373,12 @@ function FloatingEmoji() {
 }
 
 export default function WinnerAnimation() {
-  const { state, currentWinner } = useLotteryStore();
+  const { state, currentWinner, currentRoundWinners, settings } =
+    useLotteryStore();
   const t = useTranslations("Ball");
 
   const isWinnerSelected = state === LotteryState.WINNER_SELECTED;
-  const winnerName = currentWinner?.name;
+  const hasWinners = currentRoundWinners.length > 0;
 
   const handleClose = () => {
     // 只重置状态回到空闲状态，保留中奖记录
@@ -273,7 +402,7 @@ export default function WinnerAnimation() {
 
   return (
     <AnimatePresence>
-      {isWinnerSelected && winnerName && (
+      {isWinnerSelected && hasWinners && (
         <>
           {/* 背景遮罩 */}
           <motion.div
@@ -290,7 +419,11 @@ export default function WinnerAnimation() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 flex items-center justify-center z-50 p-4"
           >
-            <WinnerCard winner={winnerName} onClose={handleClose} />
+            <WinnerCard
+              winners={currentRoundWinners}
+              prizeType={settings.prizeType}
+              onClose={handleClose}
+            />
           </motion.div>
 
           {/* 粒子效果 */}
@@ -327,4 +460,3 @@ export default function WinnerAnimation() {
     </AnimatePresence>
   );
 }
- 
