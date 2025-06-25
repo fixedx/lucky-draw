@@ -153,10 +153,12 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
             return;
         }
 
+        // 清空当前轮次记录，开始新一轮抽奖
         set({
             state: LotteryState.DRAWING,
             isSpinning: true,
             currentWinner: undefined,
+            currentRoundWinners: [], // 清空当前轮次记录
         });
     },
 

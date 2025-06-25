@@ -9,6 +9,7 @@ import {
   faUsers,
   faMedal,
   faClock,
+  faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLotteryStore } from "@/utils/lotteryStore";
 import { useTranslations } from "next-intl";
@@ -39,6 +40,45 @@ export default function WinnerResultsModal({
   const handleClearRound = () => {
     clearCurrentRound();
     onClose();
+  };
+
+  // 导出中奖名单
+  const handleExportWinners = () => {
+    if (currentRoundWinners.length === 0) {
+      alert("没有中奖记录可以导出");
+      return;
+    }
+
+    // 创建导出内容
+    const timestamp = new Date().toLocaleString("zh-CN");
+    const exportContent = [
+      `# ${settings.prizeType} 中奖名单`,
+      `导出时间：${timestamp}`,
+      `中奖人数：${currentRoundWinners.length} 人`,
+      "",
+      "序号\t姓名\t奖项\t中奖时间",
+      ...currentRoundWinners.map(
+        (winner, index) =>
+          `${index + 1}\t${winner.name}\t${winner.prizeType}\t${formatTime(
+            winner.roundTime
+          )}`
+      ),
+    ].join("\n");
+
+    // 创建并下载文件
+    const blob = new Blob([exportContent], {
+      type: "text/plain;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${settings.prizeType}_中奖名单_${new Date()
+      .toLocaleDateString("zh-CN")
+      .replace(/\//g, "-")}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -182,6 +222,15 @@ export default function WinnerResultsModal({
               )}
 
               <div className="flex space-x-3 ml-auto">
+                {currentRoundWinners.length > 0 && (
+                  <button
+                    onClick={handleExportWinners}
+                    className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg transition-colors text-sm border border-green-500/30 flex items-center space-x-2"
+                  >
+                    <FontAwesomeIcon icon={faDownload} />
+                    <span>导出名单</span>
+                  </button>
+                )}
                 <button
                   onClick={onClose}
                   className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"

@@ -72,7 +72,7 @@ export default function RightToolbar({
       <motion.button
         variants={itemVariants}
         onClick={onHelp}
-        className={`${iconButtonClasses} bg-gradient-to-br from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700`}
+        className={`${iconButtonClasses} bg-gradient-to-br from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700`}
         aria-label={t("help") || "Help"}
         title={t("help") || "Help"}
       >
@@ -83,7 +83,7 @@ export default function RightToolbar({
       <motion.button
         variants={itemVariants}
         onClick={onToggleFullscreen}
-        className={`${iconButtonClasses} bg-gradient-to-br from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700`}
+        className={`${iconButtonClasses} bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700`}
         aria-label={
           isFullscreen
             ? t("exitFullscreen") || "Exit Fullscreen"
@@ -105,7 +105,7 @@ export default function RightToolbar({
       <motion.button
         variants={itemVariants}
         onClick={onImport}
-        className={`${iconButtonClasses} bg-gradient-to-br from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700`}
+        className={`${iconButtonClasses} bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700`}
         aria-label={t("manageParticipants") || "Manage Participants"}
         title={t("manageParticipants") || "Manage Participants"}
       >
@@ -117,7 +117,7 @@ export default function RightToolbar({
         variants={itemVariants}
         onClick={onReset}
         disabled={winners.length === 0} // Example: disable if no winners to reset
-        className={`${iconButtonClasses} bg-gradient-to-br from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 
+        className={`${iconButtonClasses} bg-gradient-to-br from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 
                       ${
                         winners.length === 0
                           ? "opacity-50 cursor-not-allowed"
@@ -133,15 +133,15 @@ export default function RightToolbar({
       <motion.button
         variants={itemVariants}
         onClick={onShowResults}
-        className={`${iconButtonClasses} bg-gradient-to-br from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 relative`}
+        className={`${iconButtonClasses} bg-gradient-to-br from-yellow-600 to-amber-700 hover:from-yellow-700 hover:to-amber-800 relative`}
         aria-label="查看结果"
         title="查看中奖结果"
       >
         <FontAwesomeIcon icon={faTrophy} size={iconSize} />
         {/* 红点提示 */}
         {currentRoundWinners.length > 0 && (
-          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
-            <span className="text-white text-xs font-bold">
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full flex items-center justify-center border border-yellow-300">
+            <span className="text-yellow-100 text-xs font-bold">
               {currentRoundWinners.length}
             </span>
           </div>
@@ -152,7 +152,7 @@ export default function RightToolbar({
       <motion.button
         variants={itemVariants}
         onClick={onSettings}
-        className={`${iconButtonClasses} bg-gradient-to-br from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700`}
+        className={`${iconButtonClasses} bg-gradient-to-br from-amber-600 to-yellow-700 hover:from-amber-700 hover:to-yellow-800`}
         aria-label={t("settings") || "Settings"}
         title={t("settings") || "Settings"}
       >

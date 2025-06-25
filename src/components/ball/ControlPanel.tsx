@@ -103,11 +103,11 @@ export default function ControlPanel() {
           focus:outline-none focus:ring-4
           ${
             state === LotteryState.DRAWING
-              ? "bg-red-500 hover:bg-red-600 focus:ring-red-400/50"
+              ? "bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 focus:ring-red-400/50"
               : state === LotteryState.ANIMATING ||
                 state === LotteryState.WINNER_SELECTED
               ? "bg-gray-500 cursor-not-allowed focus:ring-gray-400/50"
-              : "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 focus:ring-green-400/50"
+              : "bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 focus:ring-yellow-400/50"
           }
           ${
             isDrawButtonDisabled() &&

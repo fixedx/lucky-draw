@@ -173,10 +173,12 @@ function TextOverlay({
         const flashIntensity = flashState?.intensity || 0;
 
         // 根据闪烁状态调整颜色和发光效果
-        const baseColor = "#F1F5F9";
-        const flashColor = "#FFD700"; // 金色闪烁
+        const baseColor = "#FEF3C7"; // 温暖的奶黄色文字
+        const flashColor = "#FBBF24"; // 金黄色闪烁，更喜庆
         const currentColor = isFlashing
-          ? `rgb(${255}, ${215 + 40 * flashIntensity}, ${flashIntensity * 255})`
+          ? `rgb(${251 + 4 * flashIntensity}, ${191 + 64 * flashIntensity}, ${
+              36 + 219 * flashIntensity
+            })`
           : baseColor;
 
         return (
@@ -189,7 +191,7 @@ function TextOverlay({
             anchorX="center"
             anchorY="middle"
             outlineWidth={0.003}
-            outlineColor={isFlashing ? "#FFD700" : "#1E3A8A"} // 闪烁时描边也变为金色
+            outlineColor={isFlashing ? "#FBBF24" : "#B91C1C"} // 闪烁时描边为金黄色，平时为深红色
             maxWidth={1.2}
             textAlign="center"
             // 让文字完全平贴在表面
@@ -236,7 +238,7 @@ function Sphere({
   useFrame(() => {
     if (sphereGroupRef.current) {
       // 只围绕Y轴旋转，不做不规则旋转
-      const rotationYFactor = isSpinning ? animationSpeed * 0.05 : 0.008; // 抽奖时加快旋转速度
+      const rotationYFactor = isSpinning ? animationSpeed * 0.15 : 0.008; // 抽奖时大幅加快旋转速度
       sphereGroupRef.current.rotation.y += rotationYFactor;
       // 移除X轴旋转，保持稳定的Y轴旋转
     }
@@ -274,11 +276,11 @@ function Sphere({
       <mesh ref={physicalSphereRef}>
         <sphereGeometry args={[SPHERE_RADIUS, 48, 48]} />
         <meshStandardMaterial
-          color="#2563EB" // 深蓝色，与页面背景的blue-900呼应
-          metalness={0.7}
-          roughness={0.2}
-          emissive="#1E3A8A" // 添加轻微的蓝色发光效果
-          emissiveIntensity={0.1}
+          color="#F97316" // 橘黄色
+          metalness={0.5}
+          roughness={0.3}
+          emissive="#FBBF24" // 金黄色发光效果
+          emissiveIntensity={0.25}
         />
       </mesh>
 
@@ -289,7 +291,7 @@ function Sphere({
         <Text
           position={[0, -SPHERE_RADIUS - 0.6, 0]}
           fontSize={0.12}
-          color="#94A3B8" // 更柔和的灰色，与整体色调搭配
+          color="#FBBF24" // 金黄色，更加喜庆
         >
           {`共 ${participants.length} 名参与者`}
         </Text>
@@ -428,10 +430,10 @@ export default function SphereScene({ className = "" }: SphereSceneProps) {
 
       {/* State Display: Drawing */}
       {lotteryState === LotteryState.DRAWING && (
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-black/70 text-white px-5 py-2.5 rounded-lg backdrop-blur-sm shadow-xl">
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 bg-red-600/80 text-yellow-100 px-5 py-2.5 rounded-lg backdrop-blur-sm shadow-xl border border-yellow-300/30">
           <div className="flex items-center space-x-2.5">
-            <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
-            <span className="text-sm">幸运抽取中...</span>
+            <div className="animate-spin w-5 h-5 border-2 border-yellow-300 border-t-transparent rounded-full"></div>
+            <span className="text-sm font-medium">幸运抽取中...</span>
           </div>
         </div>
       )}

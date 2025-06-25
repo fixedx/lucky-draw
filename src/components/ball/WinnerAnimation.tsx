@@ -52,14 +52,14 @@ function ConfettiExplosion() {
     const particles: Particle[] = [];
 
     const colors = [
-      "#FF6B6B",
-      "#4ECDC4",
-      "#45B7D1",
-      "#96CEB4",
-      "#FFEAA7",
-      "#DDA0DD",
-      "#98D8C8",
-      "#F7DC6F",
+      "#F59E0B", // 琥珀色
+      "#EA580C", // 橙色
+      "#DC2626", // 红色
+      "#F97316", // 橙色
+      "#FBBF24", // 黄色
+      "#F59E0B", // 琥珀色
+      "#EF4444", // 红色
+      "#FCD34D", // 暖黄色
     ];
 
     for (let i = 0; i < particleCount; i++) {
@@ -122,7 +122,7 @@ function FireworksEffect() {
             top: firework.y,
           }}
         >
-          <div className="w-4 h-4 bg-yellow-400 rounded-full animate-ping" />
+          <div className="w-4 h-4 bg-orange-400 rounded-full animate-ping" />
         </motion.div>
       ))}
     </div>
@@ -242,8 +242,6 @@ function WinnerCard({
                 <div className="text-white font-medium text-sm leading-tight break-words px-1">
                   {winner.name}
                 </div>
-                {/* 奖杯图标 */}
-                <div className="text-yellow-300 text-lg mt-1">🏆</div>
               </motion.div>
             ))}
           </div>
@@ -382,11 +380,11 @@ export default function WinnerAnimation() {
             animate={{
               opacity: [0, 0.3, 0, 0.2, 0],
               backgroundColor: [
-                "rgba(255, 215, 0, 0)",
-                "rgba(255, 215, 0, 0.3)",
-                "rgba(255, 215, 0, 0)",
-                "rgba(255, 69, 0, 0.2)",
-                "rgba(255, 215, 0, 0)",
+                "rgba(249, 115, 22, 0)", // 橘黄色
+                "rgba(251, 191, 36, 0.3)", // 金黄色
+                "rgba(249, 115, 22, 0)", // 橘黄色
+                "rgba(245, 158, 11, 0.2)", // 琥珀色
+                "rgba(249, 115, 22, 0)", // 橘黄色
               ],
             }}
             transition={{

@@ -18,11 +18,11 @@ import { faKeyboard } from "@fortawesome/free-solid-svg-icons";
 const SphereScene = dynamic(() => import("@/components/3d/SphereScene"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
+    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 text-white">
       <div className="text-center">
         <div className="animate-spin w-12 h-12 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
         <div className="text-lg">加载3D场景中...</div>
-        <div className="text-sm text-gray-400 mt-2">正在初始化Three.js引擎</div>
+        <div className="text-sm text-white/70 mt-2">正在初始化Three.js引擎</div>
       </div>
     </div>
   ),
@@ -32,25 +32,31 @@ const SphereScene = dynamic(() => import("@/components/3d/SphereScene"), {
 function ShortcutDisplay() {
   const t = useTranslations("Ball");
   return (
-    <div className="fixed bottom-6 left-6 z-50 bg-black/50 text-white/80 p-3 rounded-lg shadow-xl backdrop-blur-sm text-xs">
+    <div className="fixed bottom-6 left-6 z-50 bg-red-600/40 text-yellow-100 p-3 rounded-lg shadow-xl backdrop-blur-sm text-xs border border-yellow-300/30">
       <div className="flex items-center space-x-2 mb-1">
-        <FontAwesomeIcon icon={faKeyboard} />
-        <span className="font-semibold">{t("shortcutsTitle")}</span>
+        <FontAwesomeIcon icon={faKeyboard} className="text-yellow-300" />
+        <span className="font-semibold text-yellow-200">
+          {t("shortcutsTitle")}
+        </span>
       </div>
       <ul className="space-y-0.5">
         <li>
-          <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs">Space</kbd>
+          <kbd className="px-1.5 py-0.5 bg-yellow-400/30 rounded text-xs text-yellow-100 font-mono">
+            Space
+          </kbd>
           : {t("spaceKeyDesc")}
         </li>
         <li>
-          <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs">
+          <kbd className="px-1.5 py-0.5 bg-yellow-400/30 rounded text-xs text-yellow-100 font-mono">
             Ctrl/Cmd+R
           </kbd>
           : {t("rKeyDesc")}
         </li>
         <li>
-          <kbd className="px-1.5 py-0.5 bg-white/20 rounded text-xs">Esc</kbd>:{" "}
-          {t("escKeyDesc")}
+          <kbd className="px-1.5 py-0.5 bg-yellow-400/30 rounded text-xs text-yellow-100 font-mono">
+            Esc
+          </kbd>
+          : {t("escKeyDesc")}
         </li>
       </ul>
     </div>
@@ -166,7 +172,7 @@ export default function BallLotteryPage() {
 
   if (!isClient) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black text-white">
+      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 text-white">
         <div className="text-center">
           <div className="animate-spin w-12 h-12 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
           <div className="text-lg">{t("initializingScene")}</div>
@@ -196,32 +202,34 @@ export default function BallLotteryPage() {
   return (
     <div
       className={`
-      relative w-full h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-black
+      relative w-full h-screen overflow-hidden bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500
       ${isFullscreen ? "cursor-none" : ""}
     `}
     >
       {/* 页面标题和描述 - 仅在非全屏模式显示 */}
       {!isFullscreen && (
-        <div className="absolute top-4 left-4 z-30 text-white">
-          <h1 className="text-2xl font-bold mb-2">
+        <div className="absolute top-4 left-4 z-30 text-yellow-200">
+          <h1 className="text-2xl font-bold mb-2 text-yellow-100 drop-shadow-md">
             {settings.pageTitle || t("title")}
           </h1>
-          <p className="text-sm text-gray-300 max-w-md">{t("description")}</p>
+          <p className="text-sm text-yellow-200 max-w-md drop-shadow-sm">
+            {t("description")}
+          </p>
         </div>
       )}
 
       {/* 右上角状态信息 - 仅在非全屏模式显示 */}
       {!isFullscreen && (
-        <div className="absolute top-4 right-4 z-30 text-white text-right">
-          <div className="bg-black/20 backdrop-blur-sm rounded-lg p-3 text-sm">
+        <div className="absolute top-4 right-4 z-30 text-yellow-100 text-right">
+          <div className="bg-red-600/30 backdrop-blur-sm rounded-lg p-3 text-sm border border-yellow-300/20">
             <div className="space-y-1">
-              <div className="text-blue-300">
+              <div className="text-yellow-200 font-medium">
                 {t("totalParticipants")}: {participants.length}
               </div>
-              <div className="text-green-300">
+              <div className="text-green-300 font-medium">
                 {t("totalWinners")}: {winners.length}
               </div>
-              <div className="text-yellow-300">
+              <div className="text-orange-300 font-medium">
                 {t("remainingPool")}: {participants.length - winners.length}
               </div>
             </div>

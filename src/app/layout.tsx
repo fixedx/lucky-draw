@@ -91,7 +91,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="alternate icon" href="/favicon.ico" type="image/x-icon" />
         <link rel="apple-touch-icon" href="/apple-icon.png" />
-        <meta name="theme-color" content="#061433" />
+        <meta name="theme-color" content="#f59e0b" />
         <link rel="manifest" href="/manifest.json" />
 
         {/* Links to different language versions */}
@@ -166,7 +166,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className="bg-[#061433] text-gray-900 min-h-screen w-full overflow-hidden">
+      <body className="bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 text-white min-h-screen w-full overflow-hidden">
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
