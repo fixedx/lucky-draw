@@ -8,17 +8,6 @@ import { useLotteryStore } from "@/utils/lotteryStore";
 import { LotteryState, type Participant } from "@/types/types";
 
 const SPHERE_RADIUS = 3;
-const MIN_VECTOR_LENGTH_SQUARED = 1e-8;
-
-const worldUp = new THREE.Vector3(0, 1, 0);
-const worldRight = new THREE.Vector3(1, 0, 0);
-const worldForward = new THREE.Vector3(0, 0, 1);
-
-interface ParticipantTextProps {
-  participant: Participant;
-  position: THREE.Vector3;
-  normal: THREE.Vector3;
-}
 
 /* // Temporarily unused
 const PARTICIPANT_COLORS = [
@@ -228,13 +217,6 @@ function Sphere({
   const physicalSphereRef = useRef<THREE.Mesh>(null!);
   // const [highlightedIndices, setHighlightedIndices] = useState<Set<number>>(new Set()); // Commented out as isHighlighted prop is not used
 
-  const MAX_VISIBLE_TEXTS = Math.min(participants?.length || 0, 50); // 增加显示数量
-
-  const visibleParticipantIndices = useMemo(() => {
-    if (!participants || participants.length === 0) return [];
-    return participants.map((_, i) => i);
-  }, [participants]);
-
   useFrame(() => {
     if (sphereGroupRef.current) {
       // 只围绕Y轴旋转，不做不规则旋转
@@ -277,10 +259,10 @@ function Sphere({
         <sphereGeometry args={[SPHERE_RADIUS, 48, 48]} />
         <meshStandardMaterial
           color="#F97316" // 橘黄色
-          metalness={0.5}
-          roughness={0.3}
+          metalness={0.2} // 降低金属度，让颜色更纯净
+          roughness={0.15} // 降低粗糙度，增加光泽
           emissive="#FBBF24" // 金黄色发光效果
-          emissiveIntensity={0.25}
+          emissiveIntensity={0.4} // 增强发光强度
         />
       </mesh>
 
@@ -386,13 +368,13 @@ export default function SphereScene({ className = "" }: SphereSceneProps) {
         }}
         frameloop="always" // Or "demand" if animations are not continuous
       >
-        <ambientLight intensity={0.8} />
+        <ambientLight intensity={1.5} />
         <directionalLight
           position={[8, 10, 12]}
-          intensity={1.2}
+          intensity={2.0}
           color="#FFFFFF"
         />
-        <pointLight position={[-10, -5, -10]} intensity={0.3} color="#E0E0E0" />
+        <pointLight position={[-10, -5, -10]} intensity={0.6} color="#E0E0E0" />
 
         <CameraController isSpinning={isSpinning} />
         <OrbitControls

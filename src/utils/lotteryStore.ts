@@ -12,14 +12,17 @@ export interface LotterySettings {
 
 // 默认设置
 const defaultSettings: LotterySettings = {
-    pageTitle: '幸运大抽奖',
-    prizeType: '幸运奖',
+    pageTitle: '',
+    prizeType: '一等奖',
     winnerCount: 1,
     removeWinnersFromPool: true,
 };
 
 // 存储设置的key
 const SETTINGS_STORAGE_KEY = 'lottery_settings';
+const PARTICIPANTS_STORAGE_KEY = 'lottery_participants';
+const WINNERS_STORAGE_KEY = 'lottery_winners';
+const HISTORY_WINNERS_STORAGE_KEY = 'lottery_history_winners'; // 新增历史中奖记录存储key
 
 interface LotteryStore extends LotteryStatus {
     // 动作方法
@@ -46,6 +49,13 @@ interface LotteryStore extends LotteryStatus {
     currentRoundWinners: Array<Participant & { prizeType: string; roundTime: number }>;
     addCurrentRoundWinner: (winner: Participant, prizeType: string) => void;
     clearCurrentRound: () => void;
+
+    // 历史中奖记录（所有轮次的累计记录）
+    historyWinners: Array<Participant & { prizeType: string; roundTime: number }>;
+    addHistoryWinner: (winner: Participant, prizeType: string) => void;
+    clearHistory: () => void;
+    loadHistoryWinners: () => void;
+    saveHistoryWinners: () => void;
 }
 
 const defaultAnimationConfig: AnimationConfig = {
@@ -88,6 +98,26 @@ function saveSettingsToStorage(settings: LotterySettings): void {
     }
 }
 
+// 历史中奖记录存储工具函数
+function getStoredHistoryWinners(): Array<Participant & { prizeType: string; roundTime: number }> {
+    if (typeof window === 'undefined') return [];
+    try {
+        const stored = localStorage.getItem(HISTORY_WINNERS_STORAGE_KEY);
+        return stored ? JSON.parse(stored) : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveHistoryWinnersToStorage(historyWinners: Array<Participant & { prizeType: string; roundTime: number }>): void {
+    if (typeof window === 'undefined') return;
+    try {
+        localStorage.setItem(HISTORY_WINNERS_STORAGE_KEY, JSON.stringify(historyWinners));
+    } catch (error) {
+        console.error('Failed to save history winners:', error);
+    }
+}
+
 export const useLotteryStore = create<LotteryStore>((set, get) => ({
     // 初始状态
     state: LotteryState.IDLE,
@@ -99,6 +129,7 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
     animationConfig: defaultAnimationConfig,
     settings: defaultSettings,
     currentRoundWinners: [],
+    historyWinners: [],
 
     // 设置参与者列表
     setParticipants: (names: string[]) => {
@@ -208,11 +239,15 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
             const winnerNames = newWinners.map(w => w.name);
             saveWinners(winnerNames);
 
-            // 批量添加到当前轮次记录
+            // 批量添加到当前轮次记录和历史记录
             selectedWinners.forEach(winner => {
                 get().addCurrentRoundWinner(winner, currentSettings.prizeType);
+                get().addHistoryWinner(winner, currentSettings.prizeType);
                 addWinner(winner.name);
             });
+
+            // 保存历史记录到localStorage
+            get().saveHistoryWinners();
 
             // 更新状态
             set({
@@ -256,6 +291,11 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
         // 清空中奖记录
         saveWinners([]);
 
+        // 清空历史记录和当前轮次记录
+        get().clearHistory();
+        get().clearCurrentRound();
+        get().saveHistoryWinners(); // 保存空的历史记录
+
         set({
             state: LotteryState.IDLE,
             participants: resetParticipants,
@@ -272,6 +312,9 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
         const participants = createParticipantsFromNames(storedParticipantNames);
         const winners = createParticipantsFromNames(storedWinnerNames);
+
+        // 加载历史记录
+        get().loadHistoryWinners();
 
         set({
             participants,
@@ -323,5 +366,32 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
     clearCurrentRound: () => {
         set({ currentRoundWinners: [] });
+    },
+
+    // 历史中奖记录相关方法
+    addHistoryWinner: (winner: Participant, prizeType: string) => {
+        const { historyWinners } = get();
+        const newWinner = {
+            ...winner,
+            prizeType,
+            roundTime: Date.now(),
+        };
+        set({
+            historyWinners: [...historyWinners, newWinner],
+        });
+    },
+
+    clearHistory: () => {
+        set({ historyWinners: [] });
+    },
+
+    loadHistoryWinners: () => {
+        const historyWinners = getStoredHistoryWinners();
+        set({ historyWinners });
+    },
+
+    saveHistoryWinners: () => {
+        const { historyWinners } = get();
+        saveHistoryWinnersToStorage(historyWinners);
     },
 })); 

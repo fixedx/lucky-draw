@@ -79,6 +79,7 @@ export default function BallLotteryPage() {
     state,
     settings,
     loadSettings,
+    loadHistoryWinners,
   } = useLotteryStore();
 
   // 确保只在客户端运行
@@ -86,6 +87,7 @@ export default function BallLotteryPage() {
     setIsClient(true);
     loadFromStorage();
     loadSettings();
+    loadHistoryWinners(); // 加载历史中奖记录
   }, []); // 移除依赖项，只在组件挂载时执行一次
 
   // 处理全屏切换

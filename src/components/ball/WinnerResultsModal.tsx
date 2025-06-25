@@ -24,7 +24,7 @@ export default function WinnerResultsModal({
   onClose,
 }: WinnerResultsModalProps) {
   const t = useTranslations("Ball");
-  const { currentRoundWinners, settings, clearCurrentRound } =
+  const { historyWinners, settings, clearHistory, saveHistoryWinners } =
     useLotteryStore();
 
   // 格式化时间
@@ -36,43 +36,63 @@ export default function WinnerResultsModal({
     });
   };
 
-  // 清空当前轮次记录
-  const handleClearRound = () => {
-    clearCurrentRound();
-    onClose();
+  // 重置所有中奖记录
+  const handleResetHistory = () => {
+    if (confirm("确定要清空所有中奖记录吗？此操作不可恢复。")) {
+      clearHistory();
+      saveHistoryWinners();
+      onClose();
+    }
   };
 
   // 导出中奖名单
   const handleExportWinners = () => {
-    if (currentRoundWinners.length === 0) {
+    if (historyWinners.length === 0) {
       alert("没有中奖记录可以导出");
       return;
     }
 
+    // 按奖项分组
+    const groupedWinners = historyWinners.reduce((groups, winner) => {
+      const key = winner.prizeType;
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+      groups[key].push(winner);
+      return groups;
+    }, {} as Record<string, typeof historyWinners>);
+
     // 创建导出内容
     const timestamp = new Date().toLocaleString("zh-CN");
     const exportContent = [
-      `# ${settings.prizeType} 中奖名单`,
+      `# 历史中奖名单`,
       `导出时间：${timestamp}`,
-      `中奖人数：${currentRoundWinners.length} 人`,
+      `总中奖人数：${historyWinners.length} 人`,
       "",
-      "序号\t姓名\t奖项\t中奖时间",
-      ...currentRoundWinners.map(
-        (winner, index) =>
-          `${index + 1}\t${winner.name}\t${winner.prizeType}\t${formatTime(
-            winner.roundTime
-          )}`
-      ),
-    ].join("\n");
+    ];
+
+    // 按奖项输出
+    Object.entries(groupedWinners).forEach(([prizeType, winners]) => {
+      exportContent.push(`## ${prizeType} (${winners.length}人)`);
+      exportContent.push("序号\t姓名\t中奖时间");
+      winners.forEach((winner, index) => {
+        exportContent.push(
+          `${index + 1}\t${winner.name}\t${formatTime(winner.roundTime)}`
+        );
+      });
+      exportContent.push("");
+    });
+
+    const exportText = exportContent.join("\n");
 
     // 创建并下载文件
-    const blob = new Blob([exportContent], {
+    const blob = new Blob([exportText], {
       type: "text/plain;charset=utf-8",
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${settings.prizeType}_中奖名单_${new Date()
+    link.download = `历史中奖名单_${new Date()
       .toLocaleDateString("zh-CN")
       .replace(/\//g, "-")}.txt`;
     document.body.appendChild(link);
@@ -125,17 +145,20 @@ export default function WinnerResultsModal({
                 <div>
                   <h3 className="text-lg font-bold text-yellow-300 flex items-center">
                     <FontAwesomeIcon icon={faMedal} className="mr-2" />
-                    {settings.prizeType}
+                    历史中奖记录
                   </h3>
                   <p className="text-white/70 text-sm mt-1">
-                    本轮中奖人数：{currentRoundWinners.length} 人
+                    累计中奖人数：{historyWinners.length} 人
                   </p>
                 </div>
-                {currentRoundWinners.length > 0 && (
+                {historyWinners.length > 0 && (
                   <div className="text-right text-white/70 text-sm">
                     <div className="flex items-center">
                       <FontAwesomeIcon icon={faClock} className="mr-1" />
-                      {formatTime(currentRoundWinners[0].roundTime)}
+                      最新：
+                      {formatTime(
+                        historyWinners[historyWinners.length - 1].roundTime
+                      )}
                     </div>
                   </div>
                 )}
@@ -144,7 +167,7 @@ export default function WinnerResultsModal({
 
             {/* 中奖名单 */}
             <div className="space-y-4 max-h-60 overflow-y-auto">
-              {currentRoundWinners.length === 0 ? (
+              {historyWinners.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-3">🎲</div>
                   <p className="text-white/70">暂无中奖记录</p>
@@ -154,7 +177,7 @@ export default function WinnerResultsModal({
                 </div>
               ) : (
                 <div className="grid gap-3">
-                  {currentRoundWinners.map((winner, index) => (
+                  {historyWinners.map((winner, index) => (
                     <motion.div
                       key={`${winner.id}-${winner.roundTime}`}
                       initial={{ opacity: 0, x: -20 }}
@@ -190,39 +213,19 @@ export default function WinnerResultsModal({
               )}
             </div>
 
-            {/* 统计信息 */}
-            {currentRoundWinners.length > 0 && (
-              <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-blue-400">
-                      {currentRoundWinners.length}
-                    </div>
-                    <div className="text-white/70 text-sm">获奖人数</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-green-400">
-                      {settings.prizeType}
-                    </div>
-                    <div className="text-white/70 text-sm">奖项等级</div>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* 按钮组 */}
             <div className="flex justify-between mt-6">
-              {currentRoundWinners.length > 0 && (
+              {historyWinners.length > 0 && (
                 <button
-                  onClick={handleClearRound}
+                  onClick={handleResetHistory}
                   className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-colors text-sm border border-red-500/30"
                 >
-                  清空本轮记录
+                  重置所有中奖记录
                 </button>
               )}
 
               <div className="flex space-x-3 ml-auto">
-                {currentRoundWinners.length > 0 && (
+                {historyWinners.length > 0 && (
                   <button
                     onClick={handleExportWinners}
                     className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg transition-colors text-sm border border-green-500/30 flex items-center space-x-2"
