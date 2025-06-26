@@ -13,6 +13,7 @@ import SettingsModal from "@/components/ball/SettingsModal";
 import WinnerResultsModal from "@/components/ball/WinnerResultsModal";
 import HelpModal from "@/components/ball/HelpModal";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import DynamicSEO from "@/components/SEO/DynamicSEO";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKeyboard } from "@fortawesome/free-solid-svg-icons";
 
@@ -242,6 +243,13 @@ export default function BallLotteryPage() {
       ${isFullscreen ? "cursor-none" : ""}
     `}
     >
+      {/* Dynamic SEO Component */}
+      <DynamicSEO
+        participantCount={participants.length}
+        winnerCount={winners.length}
+        isDrawing={state !== LotteryState.IDLE}
+        prizeTypes={[settings.prizeType]}
+      />
       {/* 页面标题和描述 - 仅在非全屏模式显示 */}
       {!isFullscreen && (
         <div className="absolute top-4 left-4 z-30 text-yellow-200">

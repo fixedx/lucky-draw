@@ -268,16 +268,6 @@ function Sphere({
 
       {/* 3D文字标签 - 跟随球体旋转 */}
       <TextOverlay participants={participants} spherePoints={spherePoints} />
-
-      {participants.length > 0 && (
-        <Text
-          position={[0, -SPHERE_RADIUS - 0.6, 0]}
-          fontSize={0.12}
-          color="#FBBF24" // 金黄色，更加喜庆
-        >
-          {`共 ${participants.length} 名参与者`}
-        </Text>
-      )}
     </group>
   );
 }

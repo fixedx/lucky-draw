@@ -1,37 +1,127 @@
 {
-  "name": "Lucky Draw System",
-  "short_name": "Lucky Draw",
-  "description": "Professional online lucky draw system supporting customized participant lists, winner counts and prize settings.",
-  "start_url": "/",
+  "name": "Lucky Draw System - Professional 3D Event Drawing Tool",
+  "short_name": "Lucky Draw 3D",
+  "description": "Professional online lucky draw system with stunning 3D sphere animation. Supports customized participant lists, winner counts and prize settings. Perfect for company events, marketing campaigns, annual meetings and celebrations. Free, multilingual and easy to use.",
+  "start_url": "/en",
   "display": "standalone",
-  "background_color": "#061433",
-  "theme_color": "#061433",
-  "orientation": "portrait-primary",
+  "background_color": "#f59e0b",
+  "theme_color": "#f59e0b",
+  "orientation": "any",
   "dir": "ltr",
   "lang": "en-US",
   "scope": "/",
-  "categories": ["tools", "business", "utilities"],
+  "categories": [
+    "productivity",
+    "business",
+    "utilities",
+    "games",
+    "entertainment"
+  ],
   "icons": [
     {
       "src": "/favicon.svg",
       "type": "image/svg+xml",
-      "sizes": "48x48 72x72 96x96 128x128 256x256"
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-192.webp",
+      "type": "image/webp",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-512.webp",
+      "type": "image/webp",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/images/icon-maskable-192.webp",
+      "type": "image/webp",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/images/icon-maskable-512.webp",
+      "type": "image/webp",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [
     {
-      "name": "Start Drawing",
-      "short_name": "Draw",
-      "description": "Quickly start a lucky draw",
-      "url": "/?action=start",
-      "icons": [{ "src": "/shortcuts/draw.png", "sizes": "96x96" }]
+      "name": "3D Ball Drawing",
+      "short_name": "3D Draw",
+      "description": "Start 3D sphere lucky draw animation",
+      "url": "/en/ball",
+      "icons": [
+        {
+          "src": "/images/shortcut-ball.webp",
+          "sizes": "96x96",
+          "type": "image/webp"
+        }
+      ]
     },
     {
-      "name": "Import List",
-      "short_name": "Import",
-      "description": "Import participant list",
-      "url": "/?action=import",
-      "icons": [{ "src": "/shortcuts/import.png", "sizes": "96x96" }]
+      "name": "Manage Participants",
+      "short_name": "Participants",
+      "description": "Import and manage participant lists",
+      "url": "/en/ball?action=import",
+      "icons": [
+        {
+          "src": "/images/shortcut-import.webp",
+          "sizes": "96x96",
+          "type": "image/webp"
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "short_name": "Settings",
+      "description": "Configure draw settings and prizes",
+      "url": "/en/ball?action=settings",
+      "icons": [
+        {
+          "src": "/images/shortcut-settings.webp",
+          "sizes": "96x96",
+          "type": "image/webp"
+        }
+      ]
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "/images/screenshot-3d-sphere.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "3D Sphere Animation in Action"
+    },
+    {
+      "src": "/images/screenshot-winner-animation.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Winner Announcement Animation"
+    },
+    {
+      "src": "/images/screenshot-mobile.webp",
+      "sizes": "828x1792",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Mobile Responsive Interface"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 320
+  }
 }
