@@ -328,5 +328,5 @@ export const PRESET_PARTICIPANT_LISTS = {
         '路飞', '索隆', '娜美', '乌索普', '山治'
     ],
 
-    event: (): string[] => generateParticipantList(50, 'mixed')
+    event: (): string[] => generateParticipantList(1000, 'mixed')
 } as const; 

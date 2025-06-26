@@ -18,7 +18,10 @@ import {
   exportParticipantsToTxt,
   exportWinnersToTxt,
 } from "@/utils/storageUtils";
-import { PRESET_PARTICIPANT_LISTS } from "@/utils/nameGenerator";
+import {
+  PRESET_PARTICIPANT_LISTS,
+  generateParticipantList,
+} from "@/utils/nameGenerator";
 import { useTranslations } from "next-intl";
 
 interface DataManagerProps {
@@ -171,7 +174,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
 
   // 生成示例数据
   const generateSampleData = () => {
-    const sampleNames = PRESET_PARTICIPANT_LISTS.medium();
+    const sampleNames = generateParticipantList(1000, "english");
     setParticipants(sampleNames);
     alert(t("generateSampleData", { count: sampleNames.length }));
   };
@@ -190,11 +193,11 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl"
+            className="bg-gradient-to-br from-orange-500/95 via-yellow-500/95 to-red-500/95 backdrop-blur-md rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-yellow-300/30"
             onClick={(e) => e.stopPropagation()}
           >
             {/* 标题栏 */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+            <div className="flex items-center justify-between p-6 border-b border-yellow-300/30 bg-gradient-to-r from-orange-600/50 to-red-600/50 text-white">
               <h2 className="text-2xl font-bold">{t("importData")}</h2>
               <button
                 onClick={onClose}
@@ -207,7 +210,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
             <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
               {/* 文件导入区域 */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4">
+                <h3 className="text-lg font-semibold mb-4 text-white">
                   {t("importParticipantList")}
                 </h3>
                 <div
@@ -215,8 +218,8 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                     relative border-2 border-dashed rounded-lg p-8 text-center transition-colors
                     ${
                       dragActive
-                        ? "border-blue-400 bg-blue-50"
-                        : "border-gray-300 hover:border-gray-400"
+                        ? "border-yellow-400 bg-yellow-400/20"
+                        : "border-white/30 hover:border-white/50 bg-white/10"
                     }
                   `}
                   onDragEnter={handleDrag}
@@ -240,9 +243,9 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                       <FontAwesomeIcon
                         icon={faSpinner}
                         size="3x"
-                        className="text-blue-500 animate-spin"
+                        className="text-yellow-400 animate-spin"
                       />
-                      <span className="text-gray-600">
+                      <span className="text-white/80">
                         {t("fileProcessing")}
                       </span>
                     </div>
@@ -251,19 +254,19 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                       <FontAwesomeIcon
                         icon={faFileAlt}
                         size="3x"
-                        className="text-gray-400"
+                        className="text-white/60"
                       />
                       <div>
-                        <p className="text-lg font-medium text-gray-700">
+                        <p className="text-lg font-medium text-white">
                           {t("dragDropFile")}
                         </p>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-white/70 mt-1">
                           {t("supportedFiles")}
                         </p>
                       </div>
                       <button
                         onClick={triggerFileSelect}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+                        className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-lg"
                       >
                         <FontAwesomeIcon icon={faUpload} className="mr-2" />
                         {t("selectFile")}
@@ -275,14 +278,16 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
 
               {/* 手动添加参与者 */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4">手动添加参与者</h3>
+                <h3 className="text-lg font-semibold mb-4 text-white">
+                  {t("manualAddParticipants")}
+                </h3>
                 <div className="flex space-x-3">
                   <input
                     type="text"
                     value={newParticipantName}
                     onChange={(e) => setNewParticipantName(e.target.value)}
-                    placeholder="输入参与者姓名..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder={t("inputParticipantName")}
+                    className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                     onKeyPress={(e) => {
                       if (e.key === "Enter") {
                         handleAddParticipant();
@@ -291,16 +296,16 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                   />
                   <button
                     onClick={handleAddParticipant}
-                    className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors"
+                    className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-lg"
                   >
                     <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                    添加
+                    {t("addButton")}
                   </button>
                   <button
                     onClick={generateSampleData}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-lg transition-colors"
+                    className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-lg"
                   >
-                    生成示例
+                    {t("generateSample")}
                   </button>
                 </div>
               </div>
@@ -308,45 +313,46 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
               {/* 参与者列表 */}
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">
-                    参与者名单 ({participants.length} 人)
+                  <h3 className="text-lg font-semibold text-white">
+                    {t("participantList")} ({participants.length}{" "}
+                    {t("peopleUnit")})
                   </h3>
                   <div className="space-x-2">
                     <button
                       onClick={handleExportParticipants}
-                      className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+                      className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200 text-sm shadow-lg"
                       disabled={participants.length === 0}
                     >
-                      导出参与者
+                      {t("exportParticipants")}
                     </button>
                     <button
                       onClick={handleExportWinners}
-                      className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors text-sm"
+                      className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 py-2 rounded-lg transition-all duration-200 text-sm shadow-lg"
                       disabled={winners.length === 0}
                     >
-                      导出中奖者 ({winners.length})
+                      {t("exportWinners")} ({winners.length})
                     </button>
                   </div>
                 </div>
 
-                <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg">
+                <div className="max-h-60 overflow-y-auto border border-white/20 rounded-lg bg-white/5 backdrop-blur-sm">
                   {participants.length === 0 ? (
-                    <div className="p-8 text-center text-gray-500">
-                      暂无参与者，请导入名单或手动添加
+                    <div className="p-8 text-center text-white/70">
+                      {t("noParticipantsMessage")}
                     </div>
                   ) : (
-                    <div className="divide-y divide-gray-100">
+                    <div className="divide-y divide-white/10">
                       {participants.map((participant, index) => (
                         <div
                           key={participant.id}
-                          className={`p-3 flex items-center justify-between hover:bg-gray-50 ${
+                          className={`p-3 flex items-center justify-between hover:bg-white/10 transition-colors ${
                             winners.some((w) => w.name === participant.name)
-                              ? "bg-green-50"
-                              : ""
+                              ? "bg-green-500/20"
+                              : "bg-white/5"
                           }`}
                         >
                           <div className="flex items-center space-x-3">
-                            <span className="text-sm text-gray-500 w-8">
+                            <span className="text-sm text-white/60 w-8">
                               {index + 1}.
                             </span>
                             {editingId === participant.id ? (
@@ -354,7 +360,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                                 type="text"
                                 value={editingName}
                                 onChange={(e) => setEditingName(e.target.value)}
-                                className="px-2 py-1 border border-gray-300 rounded text-sm"
+                                className="px-2 py-1 bg-white/10 border border-white/20 rounded text-sm text-white"
                                 onKeyPress={(e) => {
                                   if (e.key === "Enter") saveEdit();
                                   if (e.key === "Escape") cancelEdit();
@@ -367,16 +373,16 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                                   winners.some(
                                     (w) => w.name === participant.name
                                   )
-                                    ? "text-green-600"
-                                    : "text-gray-900"
+                                    ? "text-green-300"
+                                    : "text-white"
                                 }`}
                               >
                                 {participant.name}
                                 {winners.some(
                                   (w) => w.name === participant.name
                                 ) && (
-                                  <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                                    已中奖
+                                  <span className="ml-2 text-xs bg-green-500/30 text-green-200 px-2 py-1 rounded border border-green-400/30">
+                                    {t("hasWon")}
                                   </span>
                                 )}
                               </span>
@@ -388,13 +394,13 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                               <>
                                 <button
                                   onClick={saveEdit}
-                                  className="text-green-600 hover:text-green-800 p-1"
+                                  className="text-green-400 hover:text-green-300 p-1"
                                 >
                                   <FontAwesomeIcon icon={faCheck} size="sm" />
                                 </button>
                                 <button
                                   onClick={cancelEdit}
-                                  className="text-gray-600 hover:text-gray-800 p-1"
+                                  className="text-white/60 hover:text-white p-1"
                                 >
                                   <FontAwesomeIcon icon={faTimes} size="sm" />
                                 </button>
@@ -408,7 +414,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                                       participant.name
                                     )
                                   }
-                                  className="text-blue-600 hover:text-blue-800 p-1"
+                                  className="text-blue-400 hover:text-blue-300 p-1"
                                 >
                                   <FontAwesomeIcon icon={faEdit} size="sm" />
                                 </button>
@@ -416,7 +422,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
                                   onClick={() =>
                                     removeParticipant(participant.id)
                                   }
-                                  className="text-red-600 hover:text-red-800 p-1"
+                                  className="text-red-400 hover:text-red-300 p-1"
                                 >
                                   <FontAwesomeIcon icon={faTrash} size="sm" />
                                 </button>
@@ -432,12 +438,12 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
             </div>
 
             {/* 底部按钮 */}
-            <div className="flex justify-end space-x-3 p-6 border-t border-gray-200 bg-gray-50">
+            <div className="flex justify-end space-x-3 p-6 border-t border-white/20 bg-gradient-to-r from-orange-600/30 to-red-600/30">
               <button
                 onClick={onClose}
-                className="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-6 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white rounded-lg transition-all duration-200 shadow-lg"
               >
-                关闭
+                {t("close")}
               </button>
             </div>
           </motion.div>

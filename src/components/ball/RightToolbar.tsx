@@ -135,7 +135,7 @@ export default function RightToolbar({
         onClick={onShowResults}
         className={`${iconButtonClasses} bg-gradient-to-br from-yellow-600 to-amber-700 hover:from-yellow-700 hover:to-amber-800 relative`}
         aria-label="查看结果"
-        title="查看中奖结果"
+        title={t("viewWinnerResults")}
       >
         <FontAwesomeIcon icon={faTrophy} size={iconSize} />
         {/* 红点提示 */}

@@ -18,20 +18,21 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-const commonPrizeTypes = [
-  "一等奖",
-  "二等奖",
-  "三等奖",
-  "幸运奖",
-  "特等奖",
-  "优秀奖",
-  "参与奖",
-  "纪念奖",
-];
-
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const t = useTranslations("Ball");
   const { settings, setSettings, loadSettings } = useLotteryStore();
+
+  // 常见奖项类型的国际化键值
+  const commonPrizeKeys = [
+    "firstPrize",
+    "secondPrize",
+    "thirdPrize",
+    "luckyPrize",
+    "specialPrize",
+    "excellentPrize",
+    "participationPrize",
+    "commemorativePrize",
+  ];
 
   // 本地状态用于表单
   const [localSettings, setLocalSettings] = useState<LotterySettings>(settings);
@@ -52,8 +53,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   // 重置为默认设置
   const handleReset = () => {
     const defaultSettings: LotterySettings = {
-      pageTitle: "幸运大抽奖",
-      prizeType: "幸运奖",
+      pageTitle: t("defaultPageTitle"),
+      prizeType: t("defaultPrizeType"),
       winnerCount: 1,
       removeWinnersFromPool: true,
     };
@@ -93,7 +94,9 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <FontAwesomeIcon icon={faCog} className="text-white text-xl" />
-                <h2 className="text-xl font-bold text-white">抽奖设置</h2>
+                <h2 className="text-xl font-bold text-white">
+                  {t("lotterySettings")}
+                </h2>
               </div>
               <button
                 onClick={onClose}
@@ -109,7 +112,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <div>
                 <label className="block text-sm font-medium text-white mb-2">
                   <FontAwesomeIcon icon={faTrophy} className="mr-2" />
-                  页面标题
+                  {t("pageTitle")}
                 </label>
                 <input
                   type="text"
@@ -118,7 +121,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     updateLocalSetting("pageTitle", e.target.value)
                   }
                   className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                  placeholder="请输入页面标题"
+                  placeholder={t("enterPageTitle")}
                 />
               </div>
 
@@ -126,7 +129,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <div>
                 <label className="block text-sm font-medium text-white mb-2">
                   <FontAwesomeIcon icon={faTrophy} className="mr-2" />
-                  抽奖名称
+                  {t("lotteryName")}
                 </label>
                 <div className="relative">
                   <input
@@ -136,28 +139,28 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                       updateLocalSetting("prizeType", e.target.value)
                     }
                     className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                    placeholder="请输入抽奖名称"
+                    placeholder={t("enterLotteryName")}
                     list="prize-types"
                   />
                   <datalist id="prize-types">
-                    {commonPrizeTypes.map((type) => (
-                      <option key={type} value={type} />
+                    {commonPrizeKeys.map((key) => (
+                      <option key={key} value={t(key)} />
                     ))}
                   </datalist>
                 </div>
                 {/* 快捷选择按钮 */}
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {commonPrizeTypes.slice(0, 4).map((type) => (
+                  {commonPrizeKeys.slice(0, 4).map((key) => (
                     <button
-                      key={type}
-                      onClick={() => updateLocalSetting("prizeType", type)}
+                      key={key}
+                      onClick={() => updateLocalSetting("prizeType", t(key))}
                       className={`px-3 py-1 rounded-md text-xs transition-colors ${
-                        localSettings.prizeType === type
+                        localSettings.prizeType === t(key)
                           ? "bg-blue-500 text-white"
                           : "bg-white/10 text-white hover:bg-white/20"
                       }`}
                     >
-                      {type}
+                      {t(key)}
                     </button>
                   ))}
                 </div>
@@ -167,7 +170,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <div>
                 <label className="block text-sm font-medium text-white mb-2">
                   <FontAwesomeIcon icon={faUsers} className="mr-2" />
-                  中奖人数
+                  {t("winnerCount")}
                 </label>
                 <div className="flex items-center space-x-3">
                   <input
@@ -183,7 +186,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                     }
                     className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                   />
-                  <span className="text-white text-sm">人</span>
+                  <span className="text-white text-sm">{t("peopleUnit")}</span>
                 </div>
                 {/* 快捷选择按钮 */}
                 <div className="flex gap-2 mt-2">
@@ -197,7 +200,8 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           : "bg-white/10 text-white hover:bg-white/20"
                       }`}
                     >
-                      {count}人
+                      {count}
+                      {t("peopleUnit")}
                     </button>
                   ))}
                 </div>
@@ -219,11 +223,11 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   />
                   <div className="flex items-center text-white">
                     <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                    <span>中奖后从抽奖池中移除</span>
+                    <span>{t("removeWinnersFromPool")}</span>
                   </div>
                 </label>
                 <p className="text-white/70 text-xs mt-1 ml-7">
-                  勾选后，中奖者将不再参与后续抽奖
+                  {t("removeWinnersNote")}
                 </p>
               </div>
             </div>
@@ -234,7 +238,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 onClick={handleReset}
                 className="px-4 py-2 bg-gray-500/20 hover:bg-gray-500/30 text-white rounded-lg transition-colors text-sm"
               >
-                重置默认
+                {t("resetDefault")}
               </button>
 
               <div className="flex space-x-3">
@@ -242,13 +246,13 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   onClick={onClose}
                   className="px-4 py-2 bg-gray-500/20 hover:bg-gray-500/30 text-white rounded-lg transition-colors"
                 >
-                  取消
+                  {t("cancel")}
                 </button>
                 <button
                   onClick={handleSave}
                   className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
                 >
-                  保存
+                  {t("save")}
                 </button>
               </div>
             </div>

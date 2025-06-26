@@ -38,7 +38,7 @@ export default function WinnerResultsModal({
 
   // 重置所有中奖记录
   const handleResetHistory = () => {
-    if (confirm("确定要清空所有中奖记录吗？此操作不可恢复。")) {
+    if (confirm(t("confirmResetWinners"))) {
       clearHistory();
       saveHistoryWinners();
       onClose();
@@ -48,7 +48,7 @@ export default function WinnerResultsModal({
   // 导出中奖名单
   const handleExportWinners = () => {
     if (historyWinners.length === 0) {
-      alert("没有中奖记录可以导出");
+      alert(t("noWinnerRecords"));
       return;
     }
 
@@ -65,16 +65,16 @@ export default function WinnerResultsModal({
     // 创建导出内容
     const timestamp = new Date().toLocaleString("zh-CN");
     const exportContent = [
-      `# 历史中奖名单`,
-      `导出时间：${timestamp}`,
-      `总中奖人数：${historyWinners.length} 人`,
+      `# ${t("historicalWinnerList")}`,
+      `${t("exportTime")}：${timestamp}`,
+      `${t("totalWinnerCount")}：${historyWinners.length} ${t("peopleUnit")}`,
       "",
     ];
 
     // 按奖项输出
     Object.entries(groupedWinners).forEach(([prizeType, winners]) => {
       exportContent.push(`## ${prizeType} (${winners.length}人)`);
-      exportContent.push("序号\t姓名\t中奖时间");
+      exportContent.push(`${t("number")}\t${t("name")}\t${t("winTime")}`);
       winners.forEach((winner, index) => {
         exportContent.push(
           `${index + 1}\t${winner.name}\t${formatTime(winner.roundTime)}`
@@ -92,7 +92,7 @@ export default function WinnerResultsModal({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `历史中奖名单_${new Date()
+    link.download = `${t("historicalWinnerList")}_${new Date()
       .toLocaleDateString("zh-CN")
       .replace(/\//g, "-")}.txt`;
     document.body.appendChild(link);
@@ -129,7 +129,9 @@ export default function WinnerResultsModal({
                   icon={faTrophy}
                   className="text-yellow-400 text-xl"
                 />
-                <h2 className="text-xl font-bold text-white">中奖结果</h2>
+                <h2 className="text-xl font-bold text-white">
+                  {t("winnerResults")}
+                </h2>
               </div>
               <button
                 onClick={onClose}
@@ -145,17 +147,18 @@ export default function WinnerResultsModal({
                 <div>
                   <h3 className="text-lg font-bold text-yellow-300 flex items-center">
                     <FontAwesomeIcon icon={faMedal} className="mr-2" />
-                    历史中奖记录
+                    {t("historicalWinners")}
                   </h3>
                   <p className="text-white/70 text-sm mt-1">
-                    累计中奖人数：{historyWinners.length} 人
+                    {t("totalWinners")}：{historyWinners.length}{" "}
+                    {t("peopleUnit")}
                   </p>
                 </div>
                 {historyWinners.length > 0 && (
                   <div className="text-right text-white/70 text-sm">
                     <div className="flex items-center">
                       <FontAwesomeIcon icon={faClock} className="mr-1" />
-                      最新：
+                      {t("latest")}：
                       {formatTime(
                         historyWinners[historyWinners.length - 1].roundTime
                       )}
@@ -170,9 +173,9 @@ export default function WinnerResultsModal({
               {historyWinners.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-3">🎲</div>
-                  <p className="text-white/70">暂无中奖记录</p>
+                  <p className="text-white/70">{t("noWinnerRecords")}</p>
                   <p className="text-white/50 text-sm mt-2">
-                    开始抽奖后，中奖结果将显示在这里
+                    {t("drawResultsWillShowHere")}
                   </p>
                 </div>
               ) : (
@@ -204,7 +207,9 @@ export default function WinnerResultsModal({
                             icon={faTrophy}
                             className="mr-1 text-sm"
                           />
-                          <span className="text-sm font-medium">获奖</span>
+                          <span className="text-sm font-medium">
+                            {t("hasWon")}
+                          </span>
                         </div>
                       </div>
                     </motion.div>
@@ -220,7 +225,7 @@ export default function WinnerResultsModal({
                   onClick={handleResetHistory}
                   className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-colors text-sm border border-red-500/30"
                 >
-                  重置所有中奖记录
+                  {t("resetAllWinners")}
                 </button>
               )}
 
@@ -231,14 +236,14 @@ export default function WinnerResultsModal({
                     className="px-4 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-300 rounded-lg transition-colors text-sm border border-green-500/30 flex items-center space-x-2"
                   >
                     <FontAwesomeIcon icon={faDownload} />
-                    <span>导出名单</span>
+                    <span>{t("exportWinners")}</span>
                   </button>
                 )}
                 <button
                   onClick={onClose}
                   className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
                 >
-                  关闭
+                  {t("close")}
                 </button>
               </div>
             </div>

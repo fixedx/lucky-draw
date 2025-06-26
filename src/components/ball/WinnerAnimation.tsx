@@ -197,7 +197,7 @@ function WinnerCard({
         transition={{ delay: 0.6, duration: 0.5 }}
         className="text-xl text-white/90 mb-4 font-semibold"
       >
-        {prizeType} • {winners.length}人中奖
+        {prizeType} • {t("winnersCount", { count: winners.length })}
       </motion.div>
 
       {/* 获奖者名单 */}
@@ -270,7 +270,7 @@ function WinnerCard({
           onClick={onClose}
           className="bg-white text-orange-500 font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
         >
-          确认
+          {t("confirmText")}
         </motion.button>
       </div>
     </motion.div>

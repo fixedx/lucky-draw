@@ -10,10 +10,10 @@ export interface LotterySettings {
     removeWinnersFromPool: boolean; // 中奖后是否移除
 }
 
-// 默认设置
+// 默认设置（使用英文，将在加载时被国际化替换）
 const defaultSettings: LotterySettings = {
-    pageTitle: '',
-    prizeType: '一等奖',
+    pageTitle: 'Lucky Draw',
+    prizeType: 'Lucky Prize',
     winnerCount: 1,
     removeWinnersFromPool: true,
 };

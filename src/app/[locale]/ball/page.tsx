@@ -11,6 +11,8 @@ import DataManager from "@/components/ball/DataManager";
 import WinnerAnimation from "@/components/ball/WinnerAnimation";
 import SettingsModal from "@/components/ball/SettingsModal";
 import WinnerResultsModal from "@/components/ball/WinnerResultsModal";
+import HelpModal from "@/components/ball/HelpModal";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKeyboard } from "@fortawesome/free-solid-svg-icons";
 
@@ -70,6 +72,7 @@ export default function BallLotteryPage() {
   const [isClient, setIsClient] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isResultsOpen, setIsResultsOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const {
     participants,
@@ -82,12 +85,20 @@ export default function BallLotteryPage() {
     loadHistoryWinners,
   } = useLotteryStore();
 
-  // 确保只在客户端运行
+  // 确保只在客户端运行并完整恢复数据
   useEffect(() => {
     setIsClient(true);
-    loadFromStorage();
-    loadSettings();
-    loadHistoryWinners(); // 加载历史中奖记录
+    // 按顺序加载所有数据，确保完整恢复
+    const initializeData = async () => {
+      // 1. 先加载设置
+      loadSettings();
+      // 2. 然后加载参与者和中奖者数据
+      loadFromStorage();
+      // 3. 最后加载历史中奖记录
+      loadHistoryWinners();
+    };
+
+    initializeData();
   }, []); // 移除依赖项，只在组件挂载时执行一次
 
   // 处理全屏切换
@@ -144,7 +155,7 @@ export default function BallLotteryPage() {
     const handleGlobalKeyPress = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.code === "KeyR") {
         event.preventDefault();
-        handleReset();
+        // handleReset();
       }
       // Esc for fullscreen is handled by RightToolbar now or can be global here too
       if (event.code === "Escape" && isFullscreen) {
@@ -204,7 +215,7 @@ export default function BallLotteryPage() {
   return (
     <div
       className={`
-      relative w-full h-screen overflow-hidden bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500
+      relative w-full h-screen overflow-hidden bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 ball-scrollbar-theme
       ${isFullscreen ? "cursor-none" : ""}
     `}
     >
@@ -220,9 +231,15 @@ export default function BallLotteryPage() {
         </div>
       )}
 
-      {/* 右上角状态信息 - 仅在非全屏模式显示 */}
+      {/* 右上角状态信息和语言切换 - 仅在非全屏模式显示 */}
       {!isFullscreen && (
-        <div className="absolute top-4 right-4 z-30 text-yellow-100 text-right">
+        <div className="absolute top-4 right-4 z-30 text-yellow-100 text-right space-y-3">
+          {/* 语言切换器 */}
+          <div className="flex justify-end">
+            <LanguageSwitcher />
+          </div>
+
+          {/* 状态信息 */}
           <div className="bg-red-600/30 backdrop-blur-sm rounded-lg p-3 text-sm border border-yellow-300/20">
             <div className="space-y-1">
               <div className="text-yellow-200 font-medium">
@@ -252,9 +269,7 @@ export default function BallLotteryPage() {
         onToggleFullscreen={toggleFullscreen}
         isFullscreen={isFullscreen}
         onReset={handleReset}
-        onHelp={() =>
-          alert(t("helpFeatureComingSoon") || "Help feature coming soon!")
-        }
+        onHelp={() => setIsHelpOpen(true)}
         onSettings={() => setIsSettingsOpen(true)}
         onShowResults={() => setIsResultsOpen(true)}
       />
@@ -278,6 +293,9 @@ export default function BallLotteryPage() {
         isOpen={isResultsOpen}
         onClose={() => setIsResultsOpen(false)}
       />
+
+      {/* 帮助弹窗 */}
+      <HelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
 
       {/* 中奖动画 */}
       <WinnerAnimation />
