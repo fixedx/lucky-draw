@@ -162,7 +162,7 @@
   },
   "Ball": {
     "title": "3D球体抽選",
-    "description": "1500人の参加者が回転する球体表面にランダムに分布する没入型3D球体抽選体験",
+    "description": "参加者が回転する球体表面にランダムに分布する没入型3D球体抽選体験",
     "loadingParticipants": "参加者を読み込み中...",
     "participantsLoaded": "{count}人の参加者が球体に読み込まれました",
     "startDrawing": "抽選開始",

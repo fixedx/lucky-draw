@@ -162,7 +162,7 @@
   },
   "Ball": {
     "title": "Tirage au Sort Sphère 3D",
-    "description": "Expérience immersive de tirage au sort avec sphère 3D avec 1500 participants distribués aléatoirement sur la surface de la sphère rotative",
+    "description": "Expérience immersive de tirage au sort avec sphère 3D avec participants distribués aléatoirement sur la surface de la sphère rotative",
     "loadingParticipants": "Chargement des participants...",
     "participantsLoaded": "{count} participants chargés sur la sphère",
     "startDrawing": "Commencer le Tirage",

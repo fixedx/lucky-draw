@@ -140,7 +140,7 @@
   },
   "Ball": {
     "title": "3D球体抽奖",
-    "description": "沉浸式3D球体抽奖体验，1500个参与者随机分布在旋转球体表面",
+    "description": "沉浸式3D球体抽奖体验，参与者随机分布在旋转球体表面",
     "loadingParticipants": "加载参与者中...",
     "participantsLoaded": "{count} 位参与者已加载到球体",
     "startDrawing": "开始抽奖",

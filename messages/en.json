@@ -173,7 +173,7 @@
   },
   "Ball": {
     "title": "3D Sphere Draw",
-    "description": "Immersive 3D sphere draw experience with 1500 participants randomly distributed on rotating sphere surface",
+    "description": "Immersive 3D sphere draw experience with participants randomly distributed on rotating sphere surface",
     "loadingParticipants": "Loading participants...",
     "participantsLoaded": "{count} participants loaded on sphere",
     "startDrawing": "Start Drawing",

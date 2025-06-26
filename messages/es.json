@@ -163,7 +163,7 @@
   },
   "Ball": {
     "title": "Sorteo de Esfera 3D",
-    "description": "Experiencia inmersiva de sorteo de esfera 3D con 1500 participantes distribuidos aleatoriamente en la superficie de la esfera rotativa",
+    "description": "Experiencia inmersiva de sorteo de esfera 3D con participantes distribuidos aleatoriamente en la superficie de la esfera rotativa",
     "loadingParticipants": "Cargando participantes...",
     "participantsLoaded": "{count} participantes cargados en la esfera",
     "startDrawing": "Iniciar Sorteo",

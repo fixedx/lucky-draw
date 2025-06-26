@@ -161,7 +161,7 @@
   },
   "Ball": {
     "title": "3D-Sphären-Ziehung",
-    "description": "Immersive 3D-Sphären-Ziehungserfahrung mit 1500 Teilnehmern, die zufällig auf der rotierenden Sphärenoberfläche verteilt sind",
+    "description": "Immersive 3D-Sphären-Ziehungserfahrung mit Teilnehmern, die zufällig auf der rotierenden Sphärenoberfläche verteilt sind",
     "loadingParticipants": "Teilnehmer werden geladen...",
     "participantsLoaded": "{count} Teilnehmer auf die Sphäre geladen",
     "startDrawing": "Ziehung Starten",

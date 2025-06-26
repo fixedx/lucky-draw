@@ -302,16 +302,16 @@ export default function BallLotteryPage() {
 
       {/* 加载提示 */}
       {participants.length === 0 && state === LotteryState.IDLE && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-10">
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-white text-center">
+        <div className="absolute inset-0 flex items-center justify-center bg-orange-900/70 backdrop-blur-sm z-10">
+          <div className="bg-gradient-to-br from-orange-500/20 to-yellow-500/20 backdrop-blur-md rounded-2xl p-8 text-white text-center border border-yellow-400/30 shadow-2xl">
             <div className="text-4xl mb-4">🎲</div>
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-xl font-semibold mb-4 text-yellow-100 drop-shadow-lg">
               {settings.pageTitle || t("title")}
             </h2>
-            <p className="text-gray-300 mb-6">{t("welcomeMessage")}</p>
+            <p className="text-yellow-200/90 mb-6">{t("welcomeMessage")}</p>
             <button
               onClick={handleImport}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors"
+              className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               {t("manageParticipants")}
             </button>

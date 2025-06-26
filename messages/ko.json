@@ -162,7 +162,7 @@
   },
   "Ball": {
     "title": "3D 구체 추첨",
-    "description": "1500명의 참가자가 회전하는 구체 표면에 무작위로 분포된 몰입형 3D 구체 추첨 경험",
+    "description": "참가자가 회전하는 구체 표면에 무작위로 분포된 몰입형 3D 구체 추첨 경험",
     "loadingParticipants": "참가자 로딩 중...",
     "participantsLoaded": "{count}명의 참가자가 구체에 로드됨",
     "startDrawing": "추첨 시작",
