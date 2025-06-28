@@ -38,6 +38,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
                     ])
                 )
             }
+        },
+        // 网格抽奖页面
+        {
+            url: `${baseUrl}/${locale}/grid`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly' as const,
+            priority: locale === 'en' ? 0.9 : 0.8,
+            alternates: {
+                languages: Object.fromEntries(
+                    supportedLocales.map(lang => [
+                        lang === 'zh' ? 'zh-CN' : lang === 'pt' ? 'pt-BR' : `${lang}-${lang.toUpperCase()}`,
+                        `${baseUrl}/${lang}/grid`
+                    ])
+                )
+            }
         }
     ])
 
