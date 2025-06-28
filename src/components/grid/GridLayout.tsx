@@ -329,8 +329,7 @@ export default function GridLayout() {
             </div>
             <div className="ml-3">
               <p className="text-sm">
-                网格模式限制最多100个参与者，当前有{participants.length}
-                个参与者。建议删除多余参与者或使用球体模式。
+                {t("gridLimitWarning", { count: participants.length })}
               </p>
             </div>
           </div>

@@ -159,11 +159,13 @@
     "noWinners": "Aún no hay ganadores",
     "generateSampleData": "Se generaron {count} participantes de ejemplo",
     "reload": "Recargar",
-    "welcomeMessage": "Haga clic en el botón \"Gestionar Participantes\" para empezar a añadir participantes, o genere datos de ejemplo para experimentar la función de sorteo"
+    "welcomeMessage": "Haga clic en el botón \"Gestionar Participantes\" para empezar a añadir participantes, o genere datos de ejemplo para experimentar la función de sorteo",
+    "gridLimitWarning": "El modo cuadrícula limita a un máximo de 100 participantes. Actualmente hay {count} participantes. Considere eliminar participantes excedentes o usar el modo Esfera."
   },
   "Ball": {
-    "title": "Sorteo de Esfera 3D",
-    "description": "Experiencia inmersiva de sorteo de esfera 3D con participantes distribuidos aleatoriamente en la superficie de la esfera rotativa",
+    "title": "Lotería Esfera 3D",
+    "description": "Experiencia inmersiva de sorteo con esfera 3D con participantes distribuidos aleatoriamente en la superficie de la esfera rotativa",
+    "returnToHome": "Volver al Inicio",
     "loadingParticipants": "Cargando participantes...",
     "participantsLoaded": "{count} participantes cargados en la esfera",
     "startDrawing": "Iniciar Sorteo",
@@ -340,9 +342,10 @@
     "initializingThreeJS": "Inicializando motor Three.js"
   },
   "Grid": {
-    "title": "Sorteo de Cuadrícula",
-    "description": "Sistema de sorteo interactivo basado en cuadrícula con tarjetas visuales de participantes y efectos de sorteo dinámicos",
-    "shortcutsTitle": "Atajos",
+    "title": "Lotería en Cuadrícula",
+    "description": "Sistema de lotería interactivo basado en cuadrícula con tarjetas visuales de participantes y efectos de sorteo dinámicos",
+    "returnToHome": "Volver al Inicio",
+    "shortcutsTitle": "Atajos de Teclado",
     "spaceKeyDesc": "Iniciar/Detener Sorteo",
     "rKeyDesc": "Reiniciar Sorteo",
     "escKeyDesc": "Salir de Pantalla Completa",
@@ -388,7 +391,25 @@
     "rowMissingName": "Fila {row}: Falta el campo nombre",
     "duplicateName": "Nombre duplicado: {name}",
     "unknownError": "Ocurrió un error desconocido",
-    "generateSampleData": "Generar Datos de Ejemplo"
+    "generateSampleData": "Generar Datos de Ejemplo",
+    "excelDataImport": "Importación de Datos Excel",
+    "manualAddParticipant": "Añadir Participante Manualmente",
+    "inputParticipantNamePlaceholder": "Ingrese el nombre del participante...",
+    "participantNameRequired": "El nombre del participante no puede estar vacío",
+    "participantAlreadyExists": "El participante ya existe",
+    "add": "Añadir",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "won": "Ganador",
+    "sampleDataName1": "Juan Pérez",
+    "sampleDataName2": "María García",
+    "sampleDataName3": "Carlos López",
+    "participantListSheet": "Lista de Participantes",
+    "participantImportTemplate": "plantilla_importacion_participantes.xlsx",
+    "noParticipantsMessage": "No hay participantes, por favor importe una lista o añada manualmente",
+    "peopleUnit": " personas"
   },
   "GridHelp": {
     "title": "Ayuda del Sorteo de Cuadrícula",
@@ -442,6 +463,64 @@
     "note1": "Todas las configuraciones y datos se guardan en el almacenamiento local del navegador",
     "note2": "Las imágenes grandes pueden afectar el rendimiento - use imágenes optimizadas",
     "note3": "El diseño de cuadrícula se ajusta automáticamente según el tamaño de pantalla",
-    "note4": "Los ganadores se resaltan y almacenan en el historial de sorteos"
+    "note4": "Los ganadores se resaltan y se almacenan en el historial de sorteos"
+  },
+  "Home": {
+    "title": "Sistema de Sorteo",
+    "subtitle": "Plataforma de Lotería Multi-Modo Profesional",
+    "description": "Elija entre nuestros poderosos modos de lotería diseñados para diferentes escenarios y audiencias",
+    "platformDescription": "Plataforma de Lotería Profesional",
+    "coreAdvantages": "Ventajas Principales",
+    "mainFeatures": "Características Principales",
+    "applicableScenarios": "Escenarios Aplicables",
+    "tips": "Consejos",
+    "start3DLottery": "Iniciar Lotería 3D",
+    "startGridLottery": "Iniciar Lotería en Cuadrícula",
+    "ballMode": {
+      "title": "Lotería Esfera 3D",
+      "subtitle": "Experiencia 3D Inmersiva",
+      "description": "Impresionante animación de esfera 3D con nombres de participantes flotantes. Perfecto para eventos grandes, reuniones anuales y ceremonias formales.",
+      "features": [
+        "Animación de esfera 3D inmersiva",
+        "Efecto de nombres en partículas flotantes",
+        "Iluminación y efectos personalizables",
+        "Soporte para listas grandes de participantes",
+        "Modo de presentación profesional"
+      ],
+      "bestFor": "Eventos grandes, reuniones anuales, ceremonias formales",
+      "startButton": "Iniciar Lotería 3D"
+    },
+    "gridMode": {
+      "title": "Lotería de Tarjetas en Cuadrícula",
+      "subtitle": "Tarjetas Visuales Interactivas",
+      "description": "Diseño de cuadrícula limpio con tarjetas de participantes mostrando nombres y avatares. Ideal para eventos de equipo, talleres y presentaciones interactivas.",
+      "features": [
+        "Diseño de cuadrícula responsive",
+        "Tarjetas de participantes con avatares",
+        "Efectos de parpadeo en tiempo real",
+        "Soporte de importación de datos Excel",
+        "Interfaz visual intuitiva"
+      ],
+      "bestFor": "Eventos de equipo, talleres, presentaciones interactivas",
+      "startButton": "Iniciar Lotería en Cuadrícula"
+    },
+    "commonFeatures": {
+      "title": "Características Compartidas",
+      "features": [
+        "Soporte multiidioma (9 idiomas)",
+        "Número de ganadores personalizable",
+        "Sistema de gestión de premios",
+        "Seguimiento del historial de ganadores",
+        "Funcionalidad de exportación",
+        "Diseño responsive",
+        "No requiere registro",
+        "Gratis para usar"
+      ]
+    },
+    "getStarted": {
+      "title": "Comenzar",
+      "description": "Elija su modo de lotería preferido y comience a crear experiencias memorables para su audiencia",
+      "tip": "Ambos modos soportan los mismos formatos de importación de datos y características de gestión de ganadores"
+    }
   }
 }

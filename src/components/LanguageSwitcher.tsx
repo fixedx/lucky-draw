@@ -21,10 +21,12 @@ const languages = [
 
 interface LanguageSwitcherProps {
   className?: string;
+  variant?: "light" | "dark";
 }
 
 export default function LanguageSwitcher({
   className = "",
+  variant = "dark",
 }: LanguageSwitcherProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -40,11 +42,32 @@ export default function LanguageSwitcher({
     setIsOpen(false);
   };
 
+  // 根据变体选择样式
+  const buttonStyles =
+    variant === "light"
+      ? "bg-gray-800/80 hover:bg-gray-800/90 backdrop-blur-sm border border-gray-700/50 rounded-lg px-3 py-2 text-white transition-all duration-200 shadow-lg"
+      : "bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white transition-all duration-200 shadow-lg";
+
+  const dropdownStyles =
+    variant === "light"
+      ? "bg-gray-800/90 backdrop-blur-md border border-gray-700/50 rounded-lg shadow-2xl z-50 min-w-48 overflow-hidden"
+      : "bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-2xl z-50 min-w-48 overflow-hidden";
+
+  const itemStyles =
+    variant === "light" ? "hover:bg-gray-700/50" : "hover:bg-white/10";
+
+  const activeStyles =
+    variant === "light"
+      ? "bg-blue-500/30 text-blue-200"
+      : "bg-yellow-500/20 text-yellow-200";
+
+  const textColor = "text-white"; // 两种变体都使用白色文字，因为背景都是深色半透明
+
   return (
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white transition-all duration-200 shadow-lg"
+        className={`flex items-center space-x-2 ${buttonStyles}`}
       >
         <FontAwesomeIcon icon={faGlobe} className="text-yellow-300" />
         <span className="text-sm font-medium">{currentLanguage.flag}</span>
@@ -73,23 +96,25 @@ export default function LanguageSwitcher({
               initial={{ opacity: 0, scale: 0.95, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: -10 }}
-              className="absolute top-full mt-2 right-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-lg shadow-2xl z-50 min-w-48 overflow-hidden"
+              className={`absolute top-full mt-2 right-0 ${dropdownStyles}`}
             >
               <div className="py-2">
                 {languages.map((language) => (
                   <button
                     key={language.code}
                     onClick={() => handleLanguageChange(language.code)}
-                    className={`w-full px-4 py-2 text-left flex items-center space-x-3 hover:bg-white/10 transition-colors ${
-                      locale === language.code
-                        ? "bg-yellow-500/20 text-yellow-200"
-                        : "text-white"
+                    className={`w-full px-4 py-2 text-left flex items-center space-x-3 ${itemStyles} transition-colors ${
+                      locale === language.code ? activeStyles : textColor
                     }`}
                   >
                     <span className="text-lg">{language.flag}</span>
                     <span className="text-sm font-medium">{language.name}</span>
                     {locale === language.code && (
-                      <div className="ml-auto w-2 h-2 bg-yellow-400 rounded-full"></div>
+                      <div
+                        className={`ml-auto w-2 h-2 ${
+                          variant === "light" ? "bg-blue-400" : "bg-yellow-400"
+                        } rounded-full`}
+                      ></div>
                     )}
                   </button>
                 ))}

@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { useLotteryStore } from "@/utils/lotteryStore";
 import { LotteryState } from "@/types/types";
 import GridLayout from "@/components/grid/GridLayout";
@@ -15,7 +17,7 @@ import HelpModal from "@/components/grid/GridHelpModal";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DynamicSEO from "@/components/SEO/DynamicSEO";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKeyboard } from "@fortawesome/free-solid-svg-icons";
+import { faKeyboard, faHome } from "@fortawesome/free-solid-svg-icons";
 
 // 快捷键显示组件
 function ShortcutDisplay() {
@@ -54,6 +56,8 @@ function ShortcutDisplay() {
 
 export default function GridLotteryPage() {
   const t = useTranslations("Grid");
+  const params = useParams();
+  const locale = params.locale as string;
   const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -218,8 +222,14 @@ export default function GridLotteryPage() {
       {/* 右上角状态信息和语言切换器 - 仅在非全屏模式显示 */}
       {!isFullscreen && (
         <div className="absolute top-4 right-4 z-30 text-white text-right space-y-3">
-          {/* 语言切换器 */}
-          <div className="flex justify-end">
+          {/* 首页按钮和语言切换器 */}
+          <div className="flex items-center justify-end space-x-3">
+            <Link href={`/${locale}`}>
+              <button className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white transition-all duration-200 shadow-lg text-sm">
+                <FontAwesomeIcon icon={faHome} className="text-purple-300" />
+                <span className="hidden sm:inline">{t("returnToHome")}</span>
+              </button>
+            </Link>
             <LanguageSwitcher />
           </div>
 

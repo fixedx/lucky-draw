@@ -157,11 +157,15 @@
     "participantExists": "Dieser Teilnehmer existiert bereits",
     "noWinners": "Noch keine Gewinner",
     "generateSampleData": "{count} Beispiel-Teilnehmer generiert",
-    "welcomeMessage": "Klicken Sie auf die Schaltfläche \"Teilnehmer Verwalten\", um mit dem Hinzufügen von Teilnehmern zu beginnen, oder generieren Sie Beispieldaten, um die Lotterie-Funktion zu erleben"
+    "welcomeMessage": "Klicken Sie auf die Schaltfläche \"Teilnehmer Verwalten\", um mit dem Hinzufügen von Teilnehmern zu beginnen, oder generieren Sie Beispieldaten, um die Lotterie-Funktion zu erleben",
+    "gridLimitWarning": "Der Rastermodus begrenzt auf maximal 100 Teilnehmer. Derzeit gibt es {count} Teilnehmer. Erwägen Sie, überschüssige Teilnehmer zu entfernen oder den Kugelmodus zu verwenden.",
+    "noParticipantsMessage": "Keine Teilnehmer, bitte Liste importieren oder manuell hinzufügen",
+    "returnToHome": "Zur Startseite"
   },
   "Ball": {
-    "title": "3D-Sphären-Ziehung",
-    "description": "Immersive 3D-Sphären-Ziehungserfahrung mit Teilnehmern, die zufällig auf der rotierenden Sphärenoberfläche verteilt sind",
+    "title": "3D-Kugel-Lotterie",
+    "description": "Immersive 3D-Kugel-Ziehungserfahrung mit Teilnehmern, die zufällig auf der rotierenden Kugeloberfläche verteilt sind",
+    "returnToHome": "Zur Startseite",
     "loadingParticipants": "Teilnehmer werden geladen...",
     "participantsLoaded": "{count} Teilnehmer auf die Sphäre geladen",
     "startDrawing": "Ziehung Starten",
@@ -339,6 +343,7 @@
   "Grid": {
     "title": "Raster-Lotterie",
     "description": "Interaktives rasterbasiertes Lotteriesystem mit visuellen Teilnehmerkarten und dynamischen Ziehungseffekten",
+    "returnToHome": "Zur Startseite",
     "shortcutsTitle": "Tastenkürzel",
     "spaceKeyDesc": "Ziehung Starten/Stoppen",
     "rKeyDesc": "Lotterie Zurücksetzen",
@@ -354,7 +359,8 @@
     "drawingAccelerating": "Beschleunige Auswahl...",
     "drawingComplete": "Ziehung abgeschlossen!",
     "welcomeMessage": "Importieren Sie Teilnehmerdaten, um die Raster-Lotterie zu starten",
-    "manageParticipants": "Teilnehmer Verwalten"
+    "manageParticipants": "Teilnehmer Verwalten",
+    "gridLimitWarning": "Der Rastermodus begrenzt auf maximal 100 Teilnehmer. Derzeit gibt es {count} Teilnehmer. Erwägen Sie, überschüssige Teilnehmer zu entfernen oder den Kugelmodus zu verwenden."
   },
   "GridDataManager": {
     "title": "Raster-Datenmanager",
@@ -385,7 +391,25 @@
     "rowMissingName": "Zeile {row}: Namensfeld fehlt",
     "duplicateName": "Doppelter Name: {name}",
     "unknownError": "Unbekannter Fehler aufgetreten",
-    "generateSampleData": "Beispieldaten Generieren"
+    "generateSampleData": "Beispieldaten Generieren",
+    "excelDataImport": "Excel-Datenimport",
+    "manualAddParticipant": "Teilnehmer Manuell Hinzufügen",
+    "inputParticipantNamePlaceholder": "Teilnehmername eingeben...",
+    "participantNameRequired": "Teilnehmername darf nicht leer sein",
+    "participantAlreadyExists": "Teilnehmer existiert bereits",
+    "add": "Hinzufügen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "won": "Gewinner",
+    "sampleDataName1": "Max Mustermann",
+    "sampleDataName2": "Anna Schmidt",
+    "sampleDataName3": "Hans Mueller",
+    "participantListSheet": "Teilnehmerliste",
+    "participantImportTemplate": "teilnehmer_import_vorlage.xlsx",
+    "noParticipantsMessage": "Keine Teilnehmer, bitte Liste importieren oder manuell hinzufügen",
+    "peopleUnit": " Personen"
   },
   "GridHelp": {
     "title": "Raster-Lotterie Hilfe",
@@ -440,5 +464,63 @@
     "note2": "Große Bilder können die Leistung beeinträchtigen - verwenden Sie optimierte Bilder",
     "note3": "Das Rasterlayout passt sich automatisch der Bildschirmgröße an",
     "note4": "Gewinner werden hervorgehoben und in der Ziehungshistorie gespeichert"
+  },
+  "Home": {
+    "title": "Glücksspiel-System",
+    "subtitle": "Professionelle Multi-Modus Lotterie-Plattform",
+    "description": "Wählen Sie aus unseren leistungsstarken Lotterie-Modi, die für verschiedene Szenarien und Zielgruppen entwickelt wurden",
+    "platformDescription": "Professionelle Lotterie-Plattform",
+    "coreAdvantages": "Hauptvorteile",
+    "mainFeatures": "Hauptmerkmale",
+    "applicableScenarios": "Anwendbare Szenarien",
+    "tips": "Tipps",
+    "start3DLottery": "3D-Lotterie starten",
+    "startGridLottery": "Raster-Lotterie starten",
+    "ballMode": {
+      "title": "3D-Kugel-Lotterie",
+      "subtitle": "Immersive 3D-Erfahrung",
+      "description": "Atemberaubende 3D-Kugel-Animation mit schwebenden Teilnehmernamen. Perfekt für große Veranstaltungen, Jahresversammlungen und formelle Zeremonien.",
+      "features": [
+        "Immersive 3D-Kugel-Animation",
+        "Schwebende Partikel-Namen-Effekt",
+        "Anpassbare Beleuchtung und Effekte",
+        "Unterstützung für große Teilnehmerlisten",
+        "Professioneller Präsentationsmodus"
+      ],
+      "bestFor": "Große Veranstaltungen, Jahresversammlungen, formelle Zeremonien",
+      "startButton": "3D-Lotterie starten"
+    },
+    "gridMode": {
+      "title": "Raster-Karten-Lotterie",
+      "subtitle": "Interaktive visuelle Karten",
+      "description": "Sauberes Raster-Layout mit Teilnehmerkarten, die Namen und Avatare zeigen. Ideal für Teamveranstaltungen, Workshops und interaktive Präsentationen.",
+      "features": [
+        "Responsives Raster-Layout",
+        "Teilnehmerkarten mit Avataren",
+        "Echtzeit-Blinkeffekte",
+        "Excel-Datenimport-Unterstützung",
+        "Intuitive visuelle Benutzeroberfläche"
+      ],
+      "bestFor": "Teamveranstaltungen, Workshops, interaktive Präsentationen",
+      "startButton": "Raster-Lotterie starten"
+    },
+    "commonFeatures": {
+      "title": "Gemeinsame Funktionen",
+      "features": [
+        "Mehrsprachige Unterstützung (9 Sprachen)",
+        "Anpassbare Gewinnerzahl",
+        "Preisverwaltungssystem",
+        "Gewinner-Verlaufsverfolgung",
+        "Exportfunktionalität",
+        "Responsives Design",
+        "Keine Registrierung erforderlich",
+        "Kostenlos zu verwenden"
+      ]
+    },
+    "getStarted": {
+      "title": "Loslegen",
+      "description": "Wählen Sie Ihren bevorzugten Lotterie-Modus und beginnen Sie, unvergessliche Erfahrungen für Ihr Publikum zu schaffen",
+      "tip": "Beide Modi unterstützen die gleichen Datenimportformate und Gewinnerverwaltungsfunktionen"
+    }
   }
 }

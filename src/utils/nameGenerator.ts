@@ -153,10 +153,10 @@ export function generateEnglishName(): string {
 }
 
 /**
- * 生成混合姓名（中英文混合）
+ * 生成混合姓名（现在默认使用英文名字）
  */
 export function generateMixedName(): string {
-    return Math.random() < 0.7 ? generateChineseName() : generateEnglishName();
+    return generateEnglishName(); // 改为只生成英文名字
 }
 
 /**
@@ -167,7 +167,7 @@ export function generateMixedName(): string {
  */
 export function generateParticipantList(
     count: number,
-    type: 'chinese' | 'english' | 'mixed' = 'mixed'
+    type: 'chinese' | 'english' | 'mixed' = 'english' // 默认改为英文
 ): string[] {
     const names = new Set<string>();
     let attempts = 0;
@@ -194,7 +194,7 @@ export function generateParticipantList(
             }
 
             // 生成一些英文名字组合
-            for (let i = 0; i < count * 0.3 && baseNames.size < count * 0.9; i++) {
+            for (let i = 0; i < count * 0.8 && baseNames.size < count * 0.9; i++) { // 增加英文名字比例
                 const firstName = englishNames[Math.floor(Math.random() * englishNames.length)];
                 const lastName = englishNames[Math.floor(Math.random() * englishNames.length)];
                 baseNames.add(`${firstName} ${lastName}`);
@@ -210,7 +210,7 @@ export function generateParticipantList(
             // 如果还不够，添加编号名字
             let counter = 1;
             while (names.size < count) {
-                names.add(`用户${counter.toString().padStart(4, '0')}`);
+                names.add(`User${counter.toString().padStart(4, '0')}`); // 改为英文编号
                 counter++;
             }
 
@@ -243,7 +243,7 @@ export function generateParticipantList(
     let counter = 1;
     while (names.size < count) {
         const paddedNumber = counter.toString().padStart(4, '0');
-        names.add(`参与者${paddedNumber}`);
+        names.add(`Participant${paddedNumber}`); // 改为英文编号
         counter++;
     }
 
@@ -258,7 +258,7 @@ export function generateParticipantList(
  */
 export function generateNumberedParticipants(
     count: number,
-    prefix: string = '参与者'
+    prefix: string = 'Participant' // 改为英文前缀
 ): string[] {
     const names: string[] = [];
 
@@ -278,13 +278,13 @@ export function generateLargeParticipantList(count: number = 1500): string[] {
     const names: string[] = [];
 
     // 生成一些真实感的名字
-    const realNames = generateParticipantList(Math.min(count * 0.6, 1000), 'mixed');
+    const realNames = generateParticipantList(Math.min(count * 0.6, 1000), 'english'); // 改为英文
     names.push(...realNames);
 
     // 填充剩余的编号名字
     const remaining = count - realNames.length;
     if (remaining > 0) {
-        const numberedNames = generateNumberedParticipants(remaining, '用户');
+        const numberedNames = generateNumberedParticipants(remaining, 'User'); // 改为英文前缀
         names.push(...numberedNames);
     }
 
@@ -308,25 +308,25 @@ function shuffleArray<T>(array: T[]): T[] {
  * 生成预设的示例数据集
  */
 export const PRESET_PARTICIPANT_LISTS = {
-    small: (): string[] => generateParticipantList(20, 'chinese'),
-    medium: (): string[] => generateParticipantList(1000, 'mixed'),
-    large: (): string[] => generateParticipantList(500, 'mixed'),
+    small: (): string[] => generateParticipantList(20, 'english'), // 改为英文
+    medium: (): string[] => generateParticipantList(1000, 'english'), // 改为英文
+    large: (): string[] => generateParticipantList(500, 'english'), // 改为英文
     xlarge: (): string[] => generateLargeParticipantList(1500),
 
     // 特定场景的预设
     company: (): string[] => [
-        '张经理', '李主管', '王总监', '赵部长', '陈秘书',
-        '杨工程师', '周设计师', '吴分析师', '郑顾问', '刘专员',
-        '胡总助', '马财务', '林人事', '何行政', '高市场',
-        '梁销售', '郭技术', '罗运营', '宋策划', '谢客服'
+        'John Manager', 'Alice Supervisor', 'Bob Director', 'Carol VP', 'David Secretary',
+        'Emily Engineer', 'Frank Designer', 'Grace Analyst', 'Henry Consultant', 'Ivy Specialist',
+        'Jack Assistant', 'Kelly Finance', 'Luke HR', 'Mary Admin', 'Nick Marketing',
+        'Olivia Sales', 'Peter Tech', 'Quinn Operations', 'Rachel Planning', 'Sam Support'
     ],
 
     classroom: (): string[] => [
-        '小明', '小红', '小李', '小王', '小张',
-        '大雄', '静香', '胖虎', '小夫', '出木杉',
-        '小樱', '小狼', '知世', '小可', '雪兔',
-        '路飞', '索隆', '娜美', '乌索普', '山治'
+        'Alex Smith', 'Bella Johnson', 'Charlie Brown', 'Diana Wilson', 'Ethan Davis',
+        'Fiona Miller', 'George Taylor', 'Hannah Anderson', 'Ian Thomas', 'Julia Jackson',
+        'Kevin White', 'Lily Harris', 'Mike Martin', 'Nina Thompson', 'Oscar Garcia',
+        'Penny Martinez', 'Quinn Robinson', 'Ruby Clark', 'Steve Lewis', 'Tina Lee'
     ],
 
-    event: (): string[] => generateParticipantList(1000, 'mixed')
+    event: (): string[] => generateParticipantList(1000, 'english') // 改为英文
 } as const; 

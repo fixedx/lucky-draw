@@ -3,6 +3,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { useLotteryStore } from "@/utils/lotteryStore";
 import { LotteryState } from "@/types/types";
 import ControlPanel from "@/components/ball/ControlPanel";
@@ -15,7 +17,7 @@ import HelpModal from "@/components/ball/HelpModal";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DynamicSEO from "@/components/SEO/DynamicSEO";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKeyboard } from "@fortawesome/free-solid-svg-icons";
+import { faKeyboard, faHome } from "@fortawesome/free-solid-svg-icons";
 
 // Dynamic import 3D scene component to avoid SSR issues
 const SphereScene = dynamic(() => import("@/components/3d/SphereScene"), {
@@ -77,6 +79,8 @@ function ShortcutDisplay() {
 
 export default function BallLotteryPage() {
   const t = useTranslations("Ball");
+  const params = useParams();
+  const locale = params.locale as string;
   const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -274,8 +278,14 @@ export default function BallLotteryPage() {
       {/* Top-right status info and language switcher - shown only in non-fullscreen mode */}
       {!isFullscreen && (
         <div className="absolute top-4 right-4 z-30 text-yellow-100 text-right space-y-3">
-          {/* Language switcher */}
-          <div className="flex justify-end">
+          {/* Home button and Language switcher */}
+          <div className="flex items-center justify-end space-x-3">
+            <Link href={`/${locale}`}>
+              <button className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white transition-all duration-200 shadow-lg text-sm">
+                <FontAwesomeIcon icon={faHome} className="text-yellow-300" />
+                <span className="hidden sm:inline">{t("returnToHome")}</span>
+              </button>
+            </Link>
             <LanguageSwitcher />
           </div>
 

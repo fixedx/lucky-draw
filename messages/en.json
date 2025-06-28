@@ -172,8 +172,9 @@
     "confirmText": "Confirm"
   },
   "Ball": {
-    "title": "3D Sphere Draw",
-    "description": "Immersive 3D sphere draw experience with participants randomly distributed on rotating sphere surface",
+    "title": "Ball Lottery",
+    "description": "Immersive 3D sphere lottery experience with participants randomly distributed on rotating sphere surface",
+    "returnToHome": "Return to Home",
     "loadingParticipants": "Loading participants...",
     "participantsLoaded": "{count} participants loaded on sphere",
     "startDrawing": "Start Drawing",
@@ -351,6 +352,7 @@
   "Grid": {
     "title": "Grid Lottery",
     "description": "Interactive grid-based lottery system with visual participant cards and dynamic drawing effects",
+    "returnToHome": "Return to Home",
     "shortcutsTitle": "Shortcuts",
     "spaceKeyDesc": "Start/Stop Drawing",
     "rKeyDesc": "Reset Lottery",
@@ -366,7 +368,8 @@
     "drawingAccelerating": "Accelerating selection...",
     "drawingComplete": "Drawing complete!",
     "welcomeMessage": "Import participant data to start the grid lottery",
-    "manageParticipants": "Manage Participants"
+    "manageParticipants": "Manage Participants",
+    "gridLimitWarning": "Grid mode limits to a maximum of 100 participants. Currently there are {count} participants. Consider removing excess participants or using Ball mode."
   },
   "GridDataManager": {
     "title": "Grid Data Manager",
@@ -397,7 +400,25 @@
     "rowMissingName": "Row {row}: Missing name field",
     "duplicateName": "Duplicate name: {name}",
     "unknownError": "Unknown error occurred",
-    "generateSampleData": "Generate Sample Data"
+    "generateSampleData": "Generate Sample Data",
+    "excelDataImport": "Excel Data Import",
+    "manualAddParticipant": "Manually Add Participant",
+    "inputParticipantNamePlaceholder": "Enter participant name...",
+    "participantNameRequired": "Participant name cannot be empty",
+    "participantAlreadyExists": "Participant already exists",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "won": "Winner",
+    "sampleDataName1": "John Doe",
+    "sampleDataName2": "Jane Smith",
+    "sampleDataName3": "Bob Johnson",
+    "participantListSheet": "Participant List",
+    "participantImportTemplate": "participant_import_template.xlsx",
+    "noParticipantsMessage": "No participants, please import list or add manually",
+    "peopleUnit": " people"
   },
   "GridHelp": {
     "title": "Grid Lottery Help",
@@ -452,5 +473,63 @@
     "note2": "Large images may affect performance - use optimized images",
     "note3": "Grid layout automatically adjusts based on screen size",
     "note4": "Winners are highlighted and stored in drawing history"
+  },
+  "Home": {
+    "title": "Lucky Draw System",
+    "subtitle": "Professional Multi-Mode Lottery Platform",
+    "description": "Choose from our powerful lottery modes designed for different scenarios and audiences",
+    "platformDescription": "Professional Lottery Platform",
+    "coreAdvantages": "Core Advantages",
+    "mainFeatures": "Main Features",
+    "applicableScenarios": "Applicable Scenarios",
+    "tips": "Tips",
+    "start3DLottery": "Start 3D Lottery",
+    "startGridLottery": "Start Grid Lottery",
+    "ballMode": {
+      "title": "3D Ball Lottery",
+      "subtitle": "Immersive 3D Experience",
+      "description": "Stunning 3D sphere animation with floating participant names. Perfect for large events, annual meetings, and formal ceremonies.",
+      "features": [
+        "Immersive 3D sphere animation",
+        "Floating particle names effect",
+        "Customizable lighting and effects",
+        "Support for large participant lists",
+        "Professional presentation mode"
+      ],
+      "bestFor": "Large events, annual meetings, formal ceremonies",
+      "startButton": "Start 3D Lottery"
+    },
+    "gridMode": {
+      "title": "Grid Card Lottery",
+      "subtitle": "Interactive Visual Cards",
+      "description": "Clean grid layout with participant cards showing names and avatars. Ideal for team events, workshops, and interactive presentations.",
+      "features": [
+        "Responsive grid layout",
+        "Participant cards with avatars",
+        "Real-time flashing effects",
+        "Excel data import support",
+        "Intuitive visual interface"
+      ],
+      "bestFor": "Team events, workshops, interactive presentations",
+      "startButton": "Start Grid Lottery"
+    },
+    "commonFeatures": {
+      "title": "Shared Features",
+      "features": [
+        "Multi-language support (9 languages)",
+        "Customizable winner counts",
+        "Prize management system",
+        "Winner history tracking",
+        "Export functionality",
+        "Responsive design",
+        "No registration required",
+        "Free to use"
+      ]
+    },
+    "getStarted": {
+      "title": "Get Started",
+      "description": "Choose your preferred lottery mode and start creating memorable experiences for your audience",
+      "tip": "Both modes support the same data import formats and winner management features"
+    }
   }
 }

@@ -139,8 +139,9 @@
     "latest": "最新"
   },
   "Ball": {
-    "title": "3D球体抽奖",
-    "description": "沉浸式3D球体抽奖体验，参与者随机分布在旋转球体表面",
+    "title": "球体抽奖",
+    "description": "3D球体粒子特效抽奖系统，支持沉浸式视觉体验和动态粒子动画",
+    "returnToHome": "返回首页",
     "loadingParticipants": "加载参与者中...",
     "participantsLoaded": "{count} 位参与者已加载到球体",
     "startDrawing": "开始抽奖",
@@ -318,6 +319,7 @@
   "Grid": {
     "title": "网格抽奖",
     "description": "交互式网格布局抽奖系统，支持可视化参与者卡片和动态抽奖效果",
+    "returnToHome": "返回首页",
     "shortcutsTitle": "快捷键",
     "spaceKeyDesc": "开始/停止抽奖",
     "rKeyDesc": "重置抽奖",
@@ -333,7 +335,8 @@
     "drawingAccelerating": "加速选择中...",
     "drawingComplete": "抽奖完成！",
     "welcomeMessage": "导入参与者数据开始网格抽奖",
-    "manageParticipants": "管理参与者"
+    "manageParticipants": "管理参与者",
+    "gridLimitWarning": "网格模式限制最多100个参与者，当前有{count}个参与者。建议删除多余参与者或使用球体模式。"
   },
   "GridDataManager": {
     "title": "网格数据管理器",
@@ -364,7 +367,25 @@
     "rowMissingName": "第{row}行：缺少姓名字段",
     "duplicateName": "重复姓名：{name}",
     "unknownError": "发生未知错误",
-    "generateSampleData": "生成示例数据"
+    "generateSampleData": "生成示例数据",
+    "excelDataImport": "Excel 数据导入",
+    "manualAddParticipant": "手动添加参与者",
+    "inputParticipantNamePlaceholder": "输入参与者姓名...",
+    "participantNameRequired": "参与者姓名不能为空",
+    "participantAlreadyExists": "参与者已存在",
+    "add": "添加",
+    "edit": "编辑",
+    "delete": "删除",
+    "save": "保存",
+    "cancel": "取消",
+    "won": "已中奖",
+    "sampleDataName1": "张三",
+    "sampleDataName2": "李四",
+    "sampleDataName3": "王五",
+    "participantListSheet": "参与者列表",
+    "participantImportTemplate": "参与者导入模板.xlsx",
+    "noParticipantsMessage": "暂无参与者，请导入名单或手动添加",
+    "peopleUnit": "人"
   },
   "GridHelp": {
     "title": "网格抽奖帮助",
@@ -419,5 +440,63 @@
     "note2": "大型图片可能影响性能，请使用优化过的图片",
     "note3": "网格布局根据屏幕尺寸自动调整",
     "note4": "中奖者会被高亮显示并存储在抽奖历史中"
+  },
+  "Home": {
+    "title": "幸运抽奖系统",
+    "subtitle": "专业多模式抽奖平台",
+    "description": "从我们为不同场景和受众设计的强大抽奖模式中选择",
+    "platformDescription": "专业抽奖平台",
+    "coreAdvantages": "核心优势",
+    "mainFeatures": "主要特性",
+    "applicableScenarios": "适用场景",
+    "tips": "小贴士",
+    "start3DLottery": "开始3D抽奖",
+    "startGridLottery": "开始网格抽奖",
+    "ballMode": {
+      "title": "3D球体抽奖",
+      "subtitle": "沉浸式3D体验",
+      "description": "惊艳的3D球体动画配合浮动参与者姓名。完美适用于大型活动、年会和正式庆典。",
+      "features": [
+        "沉浸式3D球体动画",
+        "浮动粒子姓名效果",
+        "可定制灯光和特效",
+        "支持大型参与者列表",
+        "专业演示模式"
+      ],
+      "bestFor": "大型活动、年会、正式庆典",
+      "startButton": "开始3D抽奖"
+    },
+    "gridMode": {
+      "title": "网格卡片抽奖",
+      "subtitle": "交互式视觉卡片",
+      "description": "清洁的网格布局配合显示姓名和头像的参与者卡片。适合团队活动、工作坊和互动演示。",
+      "features": [
+        "响应式网格布局",
+        "带头像的参与者卡片",
+        "实时闪烁效果",
+        "Excel数据导入支持",
+        "直观的视觉界面"
+      ],
+      "bestFor": "团队活动、工作坊、互动演示",
+      "startButton": "开始网格抽奖"
+    },
+    "commonFeatures": {
+      "title": "共同特性",
+      "features": [
+        "多语言支持（9种语言）",
+        "可定制获奖者数量",
+        "奖品管理系统",
+        "获奖者历史记录",
+        "导出功能",
+        "响应式设计",
+        "无需注册",
+        "免费使用"
+      ]
+    },
+    "getStarted": {
+      "title": "开始使用",
+      "description": "选择您偏好的抽奖模式，开始为您的观众创造难忘的体验",
+      "tip": "两种模式都支持相同的数据导入格式和获奖者管理功能"
+    }
   }
 }

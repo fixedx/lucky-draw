@@ -296,17 +296,29 @@ export default function GridDataManager({
   // 导出示例Excel
   const exportSampleExcel = useCallback(() => {
     const sampleData = [
-      { 姓名: "张三", ID: "001", 头像: "https://example.com/avatar1.jpg" },
-      { 姓名: "李四", ID: "002", 头像: "https://example.com/avatar2.jpg" },
-      { 姓名: "王五", ID: "003", 头像: "" },
+      {
+        Name: t("sampleDataName1"),
+        ID: "001",
+        Avatar: "https://example.com/avatar1.jpg",
+      },
+      {
+        Name: t("sampleDataName2"),
+        ID: "002",
+        Avatar: "https://example.com/avatar2.jpg",
+      },
+      { Name: t("sampleDataName3"), ID: "003", Avatar: "" },
     ];
 
     const worksheet = XLSX.utils.json_to_sheet(sampleData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "参与者列表");
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      t("participantListSheet")
+    );
 
-    XLSX.writeFile(workbook, "参与者导入模板.xlsx");
-  }, []);
+    XLSX.writeFile(workbook, t("participantImportTemplate"));
+  }, [t]);
 
   // 清空所有数据
   const handleClearAll = useCallback(() => {
@@ -321,12 +333,12 @@ export default function GridDataManager({
   const handleAddParticipant = () => {
     const name = newParticipantName.trim();
     if (!name) {
-      alert("参与者姓名不能为空");
+      alert(t("participantNameRequired"));
       return;
     }
 
     if (participants.some((p) => p.name === name)) {
-      alert("参与者已存在");
+      alert(t("participantAlreadyExists"));
       return;
     }
 
@@ -344,12 +356,12 @@ export default function GridDataManager({
   const saveEdit = () => {
     const name = editingName.trim();
     if (!name) {
-      alert("参与者姓名不能为空");
+      alert(t("participantNameRequired"));
       return;
     }
 
     if (participants.some((p, i) => p.name === name && i !== editingIndex)) {
-      alert("参与者已存在");
+      alert(t("participantAlreadyExists"));
       return;
     }
 
@@ -407,7 +419,7 @@ export default function GridDataManager({
             {/* 文件上传区域 */}
             <div className="mb-8">
               <h3 className="text-lg font-semibold mb-4 text-white">
-                Excel 数据导入
+                {t("excelDataImport")}
               </h3>
               <div
                 className={`
@@ -470,14 +482,14 @@ export default function GridDataManager({
             {/* 手动添加参与者 */}
             <div className="mb-8">
               <h3 className="text-lg font-semibold mb-4 text-white">
-                手动添加参与者
+                {t("manualAddParticipant")}
               </h3>
               <div className="flex space-x-3">
                 <input
                   type="text"
                   value={newParticipantName}
                   onChange={(e) => setNewParticipantName(e.target.value)}
-                  placeholder="输入参与者姓名..."
+                  placeholder={t("inputParticipantNamePlaceholder")}
                   className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:ring-2 focus:ring-purple-400 focus:border-transparent"
                   onKeyPress={(e) => {
                     if (e.key === "Enter") {
@@ -490,7 +502,7 @@ export default function GridDataManager({
                   className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-2 rounded-lg transition-all duration-200 shadow-lg"
                 >
                   <FontAwesomeIcon icon={faCheck} className="mr-2" />
-                  添加
+                  {t("add")}
                 </button>
                 <button
                   onClick={generateSampleData}
@@ -505,7 +517,8 @@ export default function GridDataManager({
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-white">
-                  参与者列表 ({participants.length} 人)
+                  {t("currentParticipants")} ({participants.length}
+                  {t("peopleUnit")})
                 </h3>
                 <div className="space-x-2">
                   <button
@@ -513,7 +526,7 @@ export default function GridDataManager({
                     className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-4 py-2 rounded-lg transition-all duration-200 text-sm shadow-lg"
                   >
                     <FontAwesomeIcon icon={faDownload} className="mr-1" />
-                    下载模板
+                    {t("downloadTemplate")}
                   </button>
                   <button
                     onClick={handleClearAll}
@@ -521,7 +534,7 @@ export default function GridDataManager({
                     disabled={participants.length === 0}
                   >
                     <FontAwesomeIcon icon={faTrash} className="mr-1" />
-                    清空全部
+                    {t("clearAll")}
                   </button>
                 </div>
               </div>
@@ -529,7 +542,7 @@ export default function GridDataManager({
               <div className="max-h-60 overflow-y-auto border border-white/20 rounded-lg bg-white/5 backdrop-blur-sm">
                 {participants.length === 0 ? (
                   <div className="p-8 text-center text-white/70">
-                    暂无参与者，请导入数据或手动添加
+                    {t("noParticipantsMessage")}
                   </div>
                 ) : (
                   <div className="divide-y divide-white/10">
@@ -571,7 +584,7 @@ export default function GridDataManager({
                                 (w) => w.name === participant.name
                               ) && (
                                 <span className="ml-2 text-xs bg-green-500/30 text-green-200 px-2 py-1 rounded border border-green-400/30">
-                                  已中奖
+                                  {t("won")}
                                 </span>
                               )}
                             </span>
@@ -670,7 +683,7 @@ export default function GridDataManager({
                     {importResult.errors.length > 0 && (
                       <details className="mt-2">
                         <summary className="cursor-pointer text-red-300 hover:text-red-200">
-                          查看错误 ({importResult.errors.length})
+                          {t("viewErrors")} ({importResult.errors.length})
                         </summary>
                         <ul className="mt-2 space-y-1 text-red-300">
                           {importResult.errors.map((error, index) => (

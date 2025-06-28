@@ -158,11 +158,14 @@
     "noWinners": "아직 당첨자가 없습니다",
     "generateSampleData": "{count}명의 샘플 참가자가 생성되었습니다",
     "reload": "새로 고침",
-    "welcomeMessage": "\"참가자 관리\" 버튼을 클릭하여 참가자 추가를 시작하거나, 샘플 데이터를 생성하여 추첨 기능을 체험해보세요"
+    "welcomeMessage": "\"참가자 관리\" 버튼을 클릭하여 참가자 추가를 시작하거나, 샘플 데이터를 생성하여 추첨 기능을 체험해보세요",
+    "noParticipantsMessage": "참가자가 없습니다. 목록을 가져오거나 수동으로 추가하세요",
+    "returnToHome": "홈으로 돌아가기"
   },
   "Ball": {
     "title": "3D 구체 추첨",
-    "description": "참가자가 회전하는 구체 표면에 무작위로 분포된 몰입형 3D 구체 추첨 경험",
+    "description": "회전하는 구체 표면에 참가자가 무작위로 분포된 몰입형 3D 구체 추첨 경험",
+    "returnToHome": "홈으로 돌아가기",
     "loadingParticipants": "참가자 로딩 중...",
     "participantsLoaded": "{count}명의 참가자가 구체에 로드됨",
     "startDrawing": "추첨 시작",
@@ -340,8 +343,9 @@
   },
   "Grid": {
     "title": "그리드 추첨",
-    "description": "참가자 카드 시각화 및 동적 추첨 효과가 있는 인터랙티브 그리드 기반 추첨 시스템",
-    "shortcutsTitle": "단축키",
+    "description": "시각적 참가자 카드와 동적 추첨 효과를 갖춘 인터랙티브 그리드 기반 추첨 시스템",
+    "returnToHome": "홈으로 돌아가기",
+    "shortcutsTitle": "바로가기",
     "spaceKeyDesc": "추첨 시작/중지",
     "rKeyDesc": "추첨 재설정",
     "escKeyDesc": "전체화면 나가기",
@@ -387,7 +391,25 @@
     "rowMissingName": "{row}행: 이름 필드가 누락되었습니다",
     "duplicateName": "중복 이름: {name}",
     "unknownError": "알 수 없는 오류가 발생했습니다",
-    "generateSampleData": "샘플 데이터 생성"
+    "generateSampleData": "샘플 데이터 생성",
+    "excelDataImport": "Excel 데이터 가져오기",
+    "manualAddParticipant": "참가자 수동 추가",
+    "inputParticipantNamePlaceholder": "참가자 이름을 입력하세요...",
+    "participantNameRequired": "참가자 이름은 비워둘 수 없습니다",
+    "participantAlreadyExists": "참가자가 이미 존재합니다",
+    "add": "추가",
+    "edit": "편집",
+    "delete": "삭제",
+    "save": "저장",
+    "cancel": "취소",
+    "won": "당첨",
+    "sampleDataName1": "김철수",
+    "sampleDataName2": "이영희",
+    "sampleDataName3": "박민수",
+    "participantListSheet": "참가자 목록",
+    "participantImportTemplate": "참가자_가져오기_템플릿.xlsx",
+    "noParticipantsMessage": "참가자가 없습니다. 목록을 가져오거나 수동으로 추가하세요",
+    "peopleUnit": "명"
   },
   "GridHelp": {
     "title": "그리드 추첨 도움말",
@@ -442,5 +464,63 @@
     "note2": "큰 이미지는 성능에 영향을 줄 수 있습니다 - 최적화된 이미지를 사용하세요",
     "note3": "그리드 레이아웃은 화면 크기에 따라 자동으로 조정됩니다",
     "note4": "당첨자는 하이라이트되고 추첨 기록에 저장됩니다"
+  },
+  "Home": {
+    "title": "추첨 시스템",
+    "subtitle": "전문 멀티모드 추첨 플랫폼",
+    "description": "다양한 시나리오와 대상을 위해 설계된 강력한 추첨 모드 중에서 선택하세요",
+    "platformDescription": "전문 추첨 플랫폼",
+    "coreAdvantages": "핵심 장점",
+    "mainFeatures": "주요 기능",
+    "applicableScenarios": "적용 가능한 시나리오",
+    "tips": "팁",
+    "start3DLottery": "3D 추첨 시작",
+    "startGridLottery": "그리드 추첨 시작",
+    "ballMode": {
+      "title": "3D 구체 추첨",
+      "subtitle": "몰입형 3D 경험",
+      "description": "떠다니는 참가자 이름이 있는 멋진 3D 구체 애니메이션. 대규모 이벤트, 연례 회의, 공식 행사에 완벽합니다.",
+      "features": [
+        "몰입형 3D 구체 애니메이션",
+        "떠다니는 파티클 이름 효과",
+        "사용자 정의 조명 및 효과",
+        "대규모 참가자 목록 지원",
+        "전문 프레젠테이션 모드"
+      ],
+      "bestFor": "대규모 이벤트, 연례 회의, 공식 행사",
+      "startButton": "3D 추첨 시작"
+    },
+    "gridMode": {
+      "title": "그리드 카드 추첨",
+      "subtitle": "인터랙티브 비주얼 카드",
+      "description": "이름과 아바타를 표시하는 참가자 카드가 있는 깔끔한 그리드 레이아웃. 팀 이벤트, 워크샵, 인터랙티브 프레젠테이션에 이상적입니다.",
+      "features": [
+        "반응형 그리드 레이아웃",
+        "아바타가 있는 참가자 카드",
+        "실시간 깜빡임 효과",
+        "Excel 데이터 가져오기 지원",
+        "직관적인 비주얼 인터페이스"
+      ],
+      "bestFor": "팀 이벤트, 워크샵, 인터랙티브 프레젠테이션",
+      "startButton": "그리드 추첨 시작"
+    },
+    "commonFeatures": {
+      "title": "공통 기능",
+      "features": [
+        "다국어 지원 (9개 언어)",
+        "사용자 정의 가능한 당첨자 수",
+        "상품 관리 시스템",
+        "당첨자 기록 추적",
+        "내보내기 기능",
+        "반응형 디자인",
+        "등록 불필요",
+        "무료 사용"
+      ]
+    },
+    "getStarted": {
+      "title": "시작하기",
+      "description": "선호하는 추첨 모드를 선택하고 청중을 위한 기억에 남는 경험을 만들어보세요",
+      "tip": "두 모드 모두 동일한 데이터 가져오기 형식과 당첨자 관리 기능을 지원합니다"
+    }
   }
 }
