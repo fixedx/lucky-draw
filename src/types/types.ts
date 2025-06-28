@@ -9,6 +9,8 @@ export interface Participant {
     element?: HTMLDivElement;
     isSelected?: boolean;
     isHighlighted?: boolean;
+    avatar?: string;
+    isFlashing?: boolean;
 }
 
 // 抽奖状态枚举

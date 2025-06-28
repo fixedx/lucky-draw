@@ -34,6 +34,7 @@ interface LotteryStore extends LotteryStatus {
     selectWinner: (winner: Participant) => void;
     resetLottery: () => void;
     loadFromStorage: () => void;
+    generateSampleData: () => void;
 
     // 动画配置
     animationConfig: AnimationConfig;
@@ -163,12 +164,26 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
     // 移除参与者
     removeParticipant: (id: string) => {
-        const { participants } = get();
+        const { participants, winners } = get();
+
+        // 找到要删除的参与者
+        const participantToRemove = participants.find(p => p.id === id);
+        if (!participantToRemove) return;
+
         const newParticipants = participants.filter(p => p.id !== id);
         const names = newParticipants.map(p => p.name);
 
+        // 如果被删除的参与者也在中奖者列表中，也要从中奖者列表中移除
+        const newWinners = winners.filter(w => w.name !== participantToRemove.name);
+        const winnerNames = newWinners.map(w => w.name);
+
         saveParticipants(names);
-        set({ participants: newParticipants });
+        saveWinners(winnerNames);
+
+        set({
+            participants: newParticipants,
+            winners: newWinners
+        });
     },
 
     // 开始抽奖
@@ -232,7 +247,7 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
         // 延迟执行最终选中
         setTimeout(() => {
-            const { settings: currentSettings, winners } = get();
+            const { settings: currentSettings, winners, participants } = get();
 
             // 批量添加获奖者到winners列表
             const newWinners = [...winners, ...selectedWinners];
@@ -249,10 +264,22 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
             // 保存历史记录到localStorage
             get().saveHistoryWinners();
 
+            // 如果设置了移除中奖者，则从参与者列表中真正删除中奖者
+            let updatedParticipants = participants;
+            if (currentSettings.removeWinnersFromPool) {
+                updatedParticipants = participants.filter(p =>
+                    !selectedWinners.some(winner => winner.id === p.id)
+                );
+                // 保存更新后的参与者列表到localStorage
+                const participantNames = updatedParticipants.map(p => p.name);
+                saveParticipants(participantNames);
+            }
+
             // 更新状态
             set({
                 state: LotteryState.WINNER_SELECTED,
                 winners: newWinners,
+                participants: updatedParticipants,
                 currentWinner: selectedWinners[0], // 显示第一个获奖者作为主要获奖者
                 isSpinning: false,
             });
@@ -261,7 +288,7 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
     // 选中获奖者
     selectWinner: (winner: Participant) => {
-        const { winners } = get();
+        const { winners, participants, settings } = get();
 
         const newWinners = [...winners, winner];
         const winnerNames = newWinners.map(w => w.name);
@@ -269,9 +296,19 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
         saveWinners(winnerNames);
         addWinner(winner.name);
 
+        // 如果设置了移除中奖者，则从参与者列表中真正删除中奖者
+        let updatedParticipants = participants;
+        if (settings.removeWinnersFromPool) {
+            updatedParticipants = participants.filter(p => p.id !== winner.id);
+            // 保存更新后的参与者列表到localStorage
+            const participantNames = updatedParticipants.map(p => p.name);
+            saveParticipants(participantNames);
+        }
+
         set({
             state: LotteryState.WINNER_SELECTED,
             winners: newWinners,
+            participants: updatedParticipants,
             currentWinner: winner,
             isSpinning: false,
         });
@@ -279,14 +316,19 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
     // 重置抽奖
     resetLottery: () => {
-        const { participants } = get();
+        const { participants, winners } = get();
 
-        // 重置所有参与者状态
-        const resetParticipants = participants.map(p => ({
-            ...p,
-            isSelected: false,
-            isHighlighted: false,
-        }));
+        // 合并参与者和中奖者，恢复完整的参与者名单
+        const allParticipantNames = new Set([
+            ...participants.map(p => p.name),
+            ...winners.map(w => w.name)
+        ]);
+
+        // 重新创建完整的参与者列表
+        const resetParticipants = createParticipantsFromNames(Array.from(allParticipantNames));
+
+        // 保存恢复后的参与者列表
+        saveParticipants(Array.from(allParticipantNames));
 
         // 清空中奖记录
         saveWinners([]);
@@ -307,43 +349,24 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
     // 从本地存储加载数据
     loadFromStorage: () => {
+        // 先加载设置
+        const settings = getStoredSettings();
+
         const storedParticipantNames = getStoredParticipants();
         const storedWinnerNames = getStoredWinners();
 
-        // 如果没有存储的参与者，自动生成1000位默认参与者
-        let participantNames = storedParticipantNames;
-        if (participantNames.length === 0) {
-            // 动态导入名称生成器
-            import('@/utils/nameGenerator').then(({ generateParticipantList }) => {
-                const defaultParticipants = generateParticipantList(1000, 'english');
-                const participants = createParticipantsFromNames(defaultParticipants);
-
-                // 保存默认参与者到本地存储
-                get().setParticipants(defaultParticipants);
-
-                // 更新状态
-                set({
-                    participants,
-                    winners: createParticipantsFromNames(storedWinnerNames),
-                    state: LotteryState.IDLE,
-                    isSpinning: false,
-                    currentWinner: undefined,
-                });
-
-                // 触发自定义事件来通知UI显示消息
-                if (typeof window !== 'undefined') {
-                    window.dispatchEvent(new CustomEvent('autoGeneratedParticipants', {
-                        detail: { count: 1000 }
-                    }));
-                }
-            });
-
-            // 在异步导入完成前先设置空状态
-            participantNames = [];
-        }
-
-        const participants = createParticipantsFromNames(participantNames);
+        let participants = createParticipantsFromNames(storedParticipantNames);
         const winners = createParticipantsFromNames(storedWinnerNames);
+
+        // 如果设置了移除中奖者，则从参与者列表中过滤掉已中奖的人
+        if (settings.removeWinnersFromPool && storedWinnerNames.length > 0) {
+            participants = participants.filter(p =>
+                !storedWinnerNames.includes(p.name)
+            );
+            // 重新保存过滤后的参与者列表
+            const filteredNames = participants.map(p => p.name);
+            saveParticipants(filteredNames);
+        }
 
         // 加载历史记录
         get().loadHistoryWinners();
@@ -351,6 +374,7 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
         set({
             participants,
             winners,
+            settings,
             state: LotteryState.IDLE,
             isSpinning: false,
             currentWinner: undefined,
@@ -425,5 +449,62 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
     saveHistoryWinners: () => {
         const { historyWinners } = get();
         saveHistoryWinnersToStorage(historyWinners);
+    },
+
+    // 根据当前模块生成示例数据
+    generateSampleData: () => {
+        // 检测当前模块
+        const isGridModule = typeof window !== 'undefined' && window.location.pathname.includes('/grid');
+        const isBallModule = typeof window !== 'undefined' && window.location.pathname.includes('/ball');
+
+        if (isGridModule) {
+            // Grid模块：生成100个参与者
+            import('@/utils/nameGenerator').then(({ generateParticipantList }) => {
+                const sampleParticipants = generateParticipantList(100, 'mixed');
+                get().setParticipants(sampleParticipants);
+
+                // 生成一些示例头像数据
+                const avatarData: { [key: string]: string } = {};
+                const sampleAvatars = [
+                    "https://api.dicebear.com/7.x/avataaars/svg?seed=1",
+                    "https://api.dicebear.com/7.x/avataaars/svg?seed=2",
+                    "https://api.dicebear.com/7.x/avataaars/svg?seed=3",
+                    "https://api.dicebear.com/7.x/avataaars/svg?seed=4",
+                    "https://api.dicebear.com/7.x/avataaars/svg?seed=5",
+                ];
+
+                // 为前20%的参与者添加示例头像
+                const avatarCount = Math.min(20, Math.floor(sampleParticipants.length * 0.2));
+                for (let i = 0; i < avatarCount; i++) {
+                    const avatarIndex = i % sampleAvatars.length;
+                    avatarData[sampleParticipants[i]] = sampleAvatars[avatarIndex];
+                }
+
+                // 保存头像数据
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem("participant_avatars", JSON.stringify(avatarData));
+                }
+
+                // 触发自定义事件来通知UI显示消息
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('autoGeneratedParticipants', {
+                        detail: { count: 100, module: 'grid' }
+                    }));
+                }
+            });
+        } else if (isBallModule) {
+            // Ball模块：生成1000个参与者
+            import('@/utils/nameGenerator').then(({ generateParticipantList }) => {
+                const sampleParticipants = generateParticipantList(1000, 'english');
+                get().setParticipants(sampleParticipants);
+
+                // 触发自定义事件来通知UI显示消息
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('autoGeneratedParticipants', {
+                        detail: { count: 1000, module: 'ball' }
+                    }));
+                }
+            });
+        }
     },
 })); 

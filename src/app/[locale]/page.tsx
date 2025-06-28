@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 export default function Home() {
   useEffect(() => {
-    window.location.href = "/ball";
+    window.location.href = "/grid";
   }, []);
   return <main></main>;
 }

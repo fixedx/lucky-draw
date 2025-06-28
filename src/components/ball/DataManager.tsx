@@ -44,6 +44,7 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
     setParticipants,
     addParticipant,
     removeParticipant,
+    generateSampleData,
   } = useLotteryStore();
 
   // 处理文件拖拽
@@ -170,13 +171,6 @@ export default function DataManager({ isOpen, onClose }: DataManagerProps) {
 
     const names = winners.map((w) => w.name);
     exportWinnersToTxt(names);
-  };
-
-  // 生成示例数据
-  const generateSampleData = () => {
-    const sampleNames = generateParticipantList(1000, "english");
-    setParticipants(sampleNames);
-    alert(t("generateSampleData", { count: sampleNames.length }));
   };
 
   return (
