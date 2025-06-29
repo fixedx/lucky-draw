@@ -65,8 +65,8 @@ function ConfettiExplosion() {
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         id: i,
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
+        x: typeof window !== "undefined" ? window.innerWidth / 2 : 500,
+        y: typeof window !== "undefined" ? window.innerHeight / 2 : 300,
         vx: (Math.random() - 0.5) * 10,
         vy: (Math.random() - 0.5) * 10,
         color: colors[Math.floor(Math.random() * colors.length)],
@@ -95,8 +95,15 @@ function FireworksEffect() {
     for (let i = 0; i < fireworkCount; i++) {
       fireworks.push({
         id: i,
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight * 0.5 + window.innerHeight * 0.1,
+        x:
+          typeof window !== "undefined"
+            ? Math.random() * window.innerWidth
+            : Math.random() * 1000,
+        y:
+          typeof window !== "undefined"
+            ? Math.random() * window.innerHeight * 0.5 +
+              window.innerHeight * 0.1
+            : Math.random() * 300 + 100,
         delay: i * 0.5,
       });
     }
@@ -133,13 +140,13 @@ function WinnerCard({
   winners,
   prizeType,
   onClose,
+  t,
 }: {
   winners: Array<{ name: string; prizeType: string }>;
   prizeType: string;
   onClose: () => void;
+  t: (key: string, values?: any) => string;
 }) {
-  const t = useTranslations("Ball");
-
   const getLayoutConfig = (count: number) => {
     if (count === 1) {
       return {
@@ -227,7 +234,7 @@ function WinnerCard({
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{
-                  delay: 0.8 + index * 0.02, // 减少延迟避免动画过长
+                  delay: 0.8 + index * 0.02,
                   duration: 0.3,
                   type: "spring",
                   stiffness: 300,
@@ -282,12 +289,15 @@ function FloatingEmoji() {
   const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
   const randomDelay = Math.random() * 2;
   const randomDuration = Math.random() * 3 + 2;
-  const randomX = Math.random() * window.innerWidth;
+  const randomX =
+    typeof window !== "undefined"
+      ? Math.random() * window.innerWidth
+      : Math.random() * 1000;
 
   return (
     <motion.div
       initial={{
-        y: window.innerHeight + 50,
+        y: typeof window !== "undefined" ? window.innerHeight + 50 : 650,
         x: randomX,
         opacity: 0,
         scale: 0,
@@ -314,7 +324,8 @@ function FloatingEmoji() {
 export default function WinnerAnimation() {
   const { state, currentWinner, currentRoundWinners, settings } =
     useLotteryStore();
-  const t = useTranslations("Ball");
+
+  const t = useTranslations("common");
 
   const isWinnerSelected = state === LotteryState.WINNER_SELECTED;
   const hasWinners = currentRoundWinners.length > 0;
@@ -362,6 +373,7 @@ export default function WinnerAnimation() {
               winners={currentRoundWinners}
               prizeType={settings.prizeType}
               onClose={handleClose}
+              t={t}
             />
           </motion.div>
 

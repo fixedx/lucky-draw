@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCube,
   faThLarge,
+  faCircle,
   faUsers,
   faTrophy,
   faLanguage,
@@ -161,7 +162,7 @@ export default function Home() {
 
         {/* Feature Cards */}
         <motion.div
-          className="mb-16 grid gap-8 lg:grid-cols-2"
+          className="mb-16 grid gap-8 lg:grid-cols-3"
           variants={staggerChildren}
           initial="initial"
           animate="animate"
@@ -186,6 +187,17 @@ export default function Home() {
             buttonText={t("gridMode.startButton")}
             href="/grid"
             gradient="bg-gradient-to-br from-blue-600 to-cyan-700"
+          />
+
+          <FeatureCard
+            icon={faCircle}
+            title={t("wheelMode.title")}
+            description={t("wheelMode.description")}
+            features={t.raw("wheelMode.features") as string[]}
+            bestFor={t("wheelMode.bestFor")}
+            buttonText={t("wheelMode.startButton")}
+            href="/wheel"
+            gradient="bg-gradient-to-br from-red-600 to-orange-700"
           />
         </motion.div>
 

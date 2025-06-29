@@ -53,6 +53,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
                     ])
                 )
             }
+        },
+        // 大转盘抽奖页面
+        {
+            url: `${baseUrl}/${locale}/wheel`,
+            lastModified: currentDate,
+            changeFrequency: 'weekly' as const,
+            priority: locale === 'en' ? 0.9 : 0.8,
+            alternates: {
+                languages: Object.fromEntries(
+                    supportedLocales.map(lang => [
+                        lang === 'zh' ? 'zh-CN' : lang === 'pt' ? 'pt-BR' : `${lang}-${lang.toUpperCase()}`,
+                        `${baseUrl}/${lang}/wheel`
+                    ])
+                )
+            }
         }
     ])
 

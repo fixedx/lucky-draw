@@ -288,7 +288,14 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
 
     // 选中获奖者
     selectWinner: (winner: Participant) => {
-        const { winners, participants, settings } = get();
+        const { winners, participants, settings, currentRoundWinners } = get();
+
+        console.log('selectWinner调试信息：', {
+            winnerName: winner.name,
+            removeWinnersFromPool: settings.removeWinnersFromPool,
+            participantsBeforeCount: participants.length,
+            winnersBeforeCount: winners.length
+        });
 
         const newWinners = [...winners, winner];
         const winnerNames = newWinners.map(w => w.name);
@@ -296,20 +303,40 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
         saveWinners(winnerNames);
         addWinner(winner.name);
 
+        // 添加到当前轮次记录，这样WinnerAnimation组件可以显示
+        const newRoundWinner = {
+            ...winner,
+            prizeType: settings.prizeType,
+            roundTime: Date.now(),
+        };
+        const updatedCurrentRoundWinners = [...currentRoundWinners, newRoundWinner];
+
+        // 同时添加到历史记录
+        get().addHistoryWinner(winner, settings.prizeType);
+
         // 如果设置了移除中奖者，则从参与者列表中真正删除中奖者
         let updatedParticipants = participants;
         if (settings.removeWinnersFromPool) {
+            console.log('执行移除中奖者逻辑，移除:', winner.name);
             updatedParticipants = participants.filter(p => p.id !== winner.id);
             // 保存更新后的参与者列表到localStorage
             const participantNames = updatedParticipants.map(p => p.name);
             saveParticipants(participantNames);
+        } else {
+            console.log('设置为不移除中奖者，保留:', winner.name);
         }
+
+        console.log('selectWinner结果：', {
+            participantsAfterCount: updatedParticipants.length,
+            winnersAfterCount: newWinners.length
+        });
 
         set({
             state: LotteryState.WINNER_SELECTED,
             winners: newWinners,
             participants: updatedParticipants,
             currentWinner: winner,
+            currentRoundWinners: updatedCurrentRoundWinners,
             isSpinning: false,
         });
     },

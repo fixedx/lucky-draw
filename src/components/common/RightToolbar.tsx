@@ -19,8 +19,7 @@ interface RightToolbarProps {
   onImport: () => void;
   onToggleFullscreen: () => void;
   isFullscreen: boolean;
-  onReset: () => void; // Renamed from handleReset for clarity
-  // Placeholder functions for new buttons
+  onReset: () => void;
   onHelp: () => void;
   onSettings: () => void;
   onShowResults: () => void;
@@ -28,7 +27,7 @@ interface RightToolbarProps {
 
 const iconButtonClasses =
   "w-14 h-14 rounded-full text-white flex items-center justify-center transition-all duration-200 ease-in-out shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-white/50";
-const iconSize = "lg"; // fa-lg is 1.33em, fa-xl is 1.6em. Let's use lg.
+const iconSize = "lg" as const;
 
 export default function RightToolbar({
   onImport,
@@ -39,8 +38,8 @@ export default function RightToolbar({
   onSettings,
   onShowResults,
 }: RightToolbarProps) {
-  const t = useTranslations("Ball"); // Or a more general namespace if needed
-  const { winners, historyWinners } = useLotteryStore(); // To disable reset if no winners, etc.
+  const t = useTranslations("common");
+  const { winners, historyWinners } = useLotteryStore();
 
   const toolbarVariants = {
     hidden: { opacity: 0, x: 100 },
@@ -73,8 +72,8 @@ export default function RightToolbar({
         variants={itemVariants}
         onClick={onHelp}
         className={`${iconButtonClasses} bg-gradient-to-br from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700`}
-        aria-label={t("help") || "Help"}
-        title={t("help") || "Help"}
+        aria-label={t("help")}
+        title={t("help")}
       >
         <FontAwesomeIcon icon={faQuestionCircle} size={iconSize} />
       </motion.button>
@@ -84,16 +83,8 @@ export default function RightToolbar({
         variants={itemVariants}
         onClick={onToggleFullscreen}
         className={`${iconButtonClasses} bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700`}
-        aria-label={
-          isFullscreen
-            ? t("exitFullscreen") || "Exit Fullscreen"
-            : t("fullscreenMode") || "Fullscreen"
-        }
-        title={
-          isFullscreen
-            ? t("exitFullscreen") || "Exit Fullscreen"
-            : t("fullscreenMode") || "Fullscreen"
-        }
+        aria-label={isFullscreen ? t("exitFullscreen") : t("fullscreenMode")}
+        title={isFullscreen ? t("exitFullscreen") : t("fullscreenMode")}
       >
         <FontAwesomeIcon
           icon={isFullscreen ? faCompress : faExpand}
@@ -106,8 +97,8 @@ export default function RightToolbar({
         variants={itemVariants}
         onClick={onImport}
         className={`${iconButtonClasses} bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700`}
-        aria-label={t("manageParticipants") || "Manage Participants"}
-        title={t("manageParticipants") || "Manage Participants"}
+        aria-label={t("manageParticipants")}
+        title={t("manageParticipants")}
       >
         <FontAwesomeIcon icon={faUsers} size={iconSize} />
       </motion.button>
@@ -116,15 +107,15 @@ export default function RightToolbar({
       <motion.button
         variants={itemVariants}
         onClick={onReset}
-        disabled={winners.length === 0} // Example: disable if no winners to reset
+        disabled={winners.length === 0}
         className={`${iconButtonClasses} bg-gradient-to-br from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 
                       ${
                         winners.length === 0
                           ? "opacity-50 cursor-not-allowed"
                           : ""
                       }`}
-        aria-label={t("resetLottery") || "Reset Lottery"}
-        title={t("resetLottery") || "Reset Lottery"}
+        aria-label={t("resetLottery")}
+        title={t("resetLottery")}
       >
         <FontAwesomeIcon icon={faRotateRight} size={iconSize} />
       </motion.button>
@@ -134,11 +125,10 @@ export default function RightToolbar({
         variants={itemVariants}
         onClick={onShowResults}
         className={`${iconButtonClasses} bg-gradient-to-br from-yellow-600 to-amber-700 hover:from-yellow-700 hover:to-amber-800 relative`}
-        aria-label="查看结果"
+        aria-label={t("viewWinnerResults")}
         title={t("viewWinnerResults")}
       >
         <FontAwesomeIcon icon={faTrophy} size={iconSize} />
-        {/* 红点提示 */}
         {historyWinners.length > 0 && (
           <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full flex items-center justify-center border border-yellow-300">
             <span className="text-yellow-100 text-xs font-bold">
@@ -153,8 +143,8 @@ export default function RightToolbar({
         variants={itemVariants}
         onClick={onSettings}
         className={`${iconButtonClasses} bg-gradient-to-br from-amber-600 to-yellow-700 hover:from-amber-700 hover:to-yellow-800`}
-        aria-label={t("settings") || "Settings"}
-        title={t("settings") || "Settings"}
+        aria-label={t("settings")}
+        title={t("settings")}
       >
         <FontAwesomeIcon icon={faCog} size={iconSize} />
       </motion.button>

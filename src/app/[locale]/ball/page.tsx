@@ -8,12 +8,12 @@ import Link from "next/link";
 import { useLotteryStore } from "@/utils/lotteryStore";
 import { LotteryState } from "@/types/types";
 import ControlPanel from "@/components/ball/ControlPanel";
-import RightToolbar from "@/components/ball/RightToolbar";
-import DataManager from "@/components/ball/DataManager";
-import WinnerAnimation from "@/components/ball/WinnerAnimation";
-import SettingsModal from "@/components/ball/SettingsModal";
-import WinnerResultsModal from "@/components/ball/WinnerResultsModal";
-import HelpModal from "@/components/ball/HelpModal";
+import RightToolbar from "@/components/common/RightToolbar";
+import DataManager from "@/components/common/DataManager";
+import WinnerAnimation from "@/components/common/WinnerAnimation";
+import SettingsModal from "@/components/common/SettingsModal";
+import WinnerResultsModal from "@/components/common/WinnerResultsModal";
+import HelpModal from "@/components/common/HelpModal";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DynamicSEO from "@/components/SEO/DynamicSEO";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -330,6 +330,7 @@ export default function BallLotteryPage() {
       <DataManager
         isOpen={isDataManagerOpen}
         onClose={() => setIsDataManagerOpen(false)}
+        module="ball"
       />
 
       {/* Settings modal */}
@@ -345,7 +346,11 @@ export default function BallLotteryPage() {
       />
 
       {/* Help modal */}
-      <HelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
+      <HelpModal
+        isOpen={isHelpOpen}
+        onClose={() => setIsHelpOpen(false)}
+        module="ball"
+      />
 
       {/* Winner animation */}
       <WinnerAnimation />

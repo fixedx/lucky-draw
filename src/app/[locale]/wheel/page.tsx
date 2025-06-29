@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { useLotteryStore } from "@/utils/lotteryStore";
+import { useLotteryUtils } from "@/utils/lotteryUtils";
 import { LotteryState } from "@/types/types";
-import GridLayout from "@/components/grid/GridLayout";
-import ControlPanel from "@/components/ball/ControlPanel";
+import SpinWheel, { type SpinWheelRef } from "@/components/wheel/SpinWheel";
+import ControlPanel from "@/components/common/ControlPanel";
 import RightToolbar from "@/components/common/RightToolbar";
 import DataManager from "@/components/common/DataManager";
 import WinnerAnimation from "@/components/common/WinnerAnimation";
@@ -21,30 +22,30 @@ import { faKeyboard, faHome } from "@fortawesome/free-solid-svg-icons";
 
 // 快捷键显示组件
 function ShortcutDisplay() {
-  const t = useTranslations("Grid");
+  const t = useTranslations("Wheel");
   return (
-    <div className="fixed bottom-6 left-6 z-50 bg-purple-600/40 text-white p-3 rounded-lg shadow-xl backdrop-blur-sm text-xs border border-purple-300/30">
+    <div className="fixed bottom-6 left-6 z-50 bg-red-600/40 text-yellow-100 p-3 rounded-lg shadow-xl backdrop-blur-sm text-xs border border-yellow-300/30">
       <div className="flex items-center space-x-2 mb-1">
-        <FontAwesomeIcon icon={faKeyboard} className="text-purple-300" />
-        <span className="font-semibold text-purple-200">
+        <FontAwesomeIcon icon={faKeyboard} className="text-yellow-300" />
+        <span className="font-semibold text-yellow-200">
           {t("shortcutsTitle")}
         </span>
       </div>
       <ul className="space-y-0.5">
         <li>
-          <kbd className="px-1.5 py-0.5 bg-purple-400/30 rounded text-xs text-white font-mono">
+          <kbd className="px-1.5 py-0.5 bg-yellow-400/30 rounded text-xs text-yellow-100 font-mono">
             Space
           </kbd>
           : {t("spaceKeyDesc")}
         </li>
         <li>
-          <kbd className="px-1.5 py-0.5 bg-purple-400/30 rounded text-xs text-white font-mono">
+          <kbd className="px-1.5 py-0.5 bg-yellow-400/30 rounded text-xs text-yellow-100 font-mono">
             Ctrl/Cmd+R
           </kbd>
           : {t("rKeyDesc")}
         </li>
         <li>
-          <kbd className="px-1.5 py-0.5 bg-purple-400/30 rounded text-xs text-white font-mono">
+          <kbd className="px-1.5 py-0.5 bg-yellow-400/30 rounded text-xs text-yellow-100 font-mono">
             Esc
           </kbd>
           : {t("escKeyDesc")}
@@ -54,8 +55,8 @@ function ShortcutDisplay() {
   );
 }
 
-export default function GridLotteryPage() {
-  const t = useTranslations("Grid");
+export default function WheelLotteryPage() {
+  const t = useTranslations("Wheel");
   const params = useParams();
   const locale = params.locale as string;
   const [isDataManagerOpen, setIsDataManagerOpen] = useState(false);
@@ -64,6 +65,12 @@ export default function GridLotteryPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isResultsOpen, setIsResultsOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  // SpinWheel组件的ref
+  const spinWheelRef = useRef<SpinWheelRef>(null);
+
+  // 抽奖工具
+  const lotteryUtils = useLotteryUtils();
 
   const {
     participants,
@@ -164,6 +171,28 @@ export default function GridLotteryPage() {
     }
   }, [winners, participants, resetLottery, t]);
 
+  // 转盘模块专用的开始抽奖逻辑
+  const handleStartDrawing = () => {
+    // 检查是否可以开始抽奖
+    if (!lotteryUtils.canStartDrawing()) {
+      return;
+    }
+
+    // 调用通用的开始抽奖逻辑
+    lotteryUtils.startDrawing(() => {
+      // 调用转盘的spin方法
+      if (spinWheelRef.current) {
+        spinWheelRef.current.spin();
+      }
+    });
+  };
+
+  // 转盘模块专用的停止抽奖逻辑
+  const handleStopDrawing = () => {
+    // 调用通用的停止抽奖逻辑
+    lotteryUtils.stopDrawing();
+  };
+
   // 键盘快捷键处理
   useEffect(() => {
     const handleGlobalKeyPress = (event: KeyboardEvent) => {
@@ -183,7 +212,7 @@ export default function GridLotteryPage() {
 
   if (!isClient) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-purple-400 via-pink-500 to-indigo-500 text-white">
+      <div className="w-full h-screen flex items-center justify-center bg-gradient-to-br from-red-400 via-orange-500 to-yellow-500 text-white">
         <div className="text-center">
           <div className="animate-spin w-12 h-12 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
           <div className="text-lg">{t("initializingScene")}</div>
@@ -195,7 +224,7 @@ export default function GridLotteryPage() {
   return (
     <div
       className={`
-      relative w-full h-screen overflow-hidden bg-gradient-to-br from-purple-400 via-pink-500 to-indigo-500 grid-scrollbar-theme
+      relative w-full h-screen overflow-hidden bg-gradient-to-br from-red-400 via-orange-500 to-yellow-500 wheel-scrollbar-theme
       ${isFullscreen ? "cursor-none" : ""}
     `}
     >
@@ -207,36 +236,36 @@ export default function GridLotteryPage() {
         prizeTypes={[settings.prizeType]}
       />
 
-      {/* 页面标题和描述 - 仅在非全屏模式显示 */}
+      {/* Page title and description - shown only in non-fullscreen mode */}
       {!isFullscreen && (
-        <div className="absolute top-4 left-4 z-30 text-white">
-          <h1 className="text-2xl font-bold mb-2 text-white drop-shadow-md">
+        <div className="absolute top-4 left-4 z-30 text-yellow-200">
+          <h1 className="text-2xl font-bold mb-2 text-yellow-100 drop-shadow-md">
             {settings.pageTitle || t("title")}
           </h1>
-          <p className="text-sm text-white/80 max-w-md drop-shadow-sm">
+          <p className="text-sm text-yellow-200 max-w-md drop-shadow-sm">
             {t("description")}
           </p>
         </div>
       )}
 
-      {/* 右上角状态信息和语言切换器 - 仅在非全屏模式显示 */}
+      {/* Top-right status info and language switcher - shown only in non-fullscreen mode */}
       {!isFullscreen && (
-        <div className="absolute top-4 right-4 z-30 text-white text-right space-y-3">
-          {/* 首页按钮和语言切换器 */}
+        <div className="absolute top-4 right-4 z-30 text-yellow-100 text-right space-y-3">
+          {/* Home button and Language switcher */}
           <div className="flex items-center justify-end space-x-3">
             <Link href={`/${locale}`}>
               <button className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-2 text-white transition-all duration-200 shadow-lg text-sm">
-                <FontAwesomeIcon icon={faHome} className="text-purple-300" />
+                <FontAwesomeIcon icon={faHome} className="text-yellow-300" />
                 <span className="hidden sm:inline">{t("returnToHome")}</span>
               </button>
             </Link>
             <LanguageSwitcher />
           </div>
 
-          {/* 状态信息 */}
-          <div className="bg-purple-600/30 backdrop-blur-sm rounded-lg p-3 text-sm border border-purple-300/20">
+          {/* Status information */}
+          <div className="bg-red-600/30 backdrop-blur-sm rounded-lg p-3 text-sm border border-yellow-300/20">
             <div className="space-y-1">
-              <div className="text-purple-100 font-medium">
+              <div className="text-yellow-200 font-medium">
                 {t("totalParticipants")}: {participants.length}
               </div>
               <div className="text-green-300 font-medium">
@@ -245,18 +274,36 @@ export default function GridLotteryPage() {
               <div className="text-orange-300 font-medium">
                 {t("remainingPool")}: {participants.length - winners.length}
               </div>
+              <div className="text-red-300 text-xs">
+                {t("maxParticipants")}: 50
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* 网格布局 */}
-      <div className="absolute inset-0">
-        <GridLayout />
+      {/* 大转盘区域 */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <SpinWheel
+          ref={spinWheelRef}
+          onWinnerSelected={(winnerName) => {
+            console.log("🏆 转盘获奖者:", winnerName);
+          }}
+          onStartSpin={() => {
+            console.log("🎡 转盘开始转动");
+          }}
+          onStopSpin={() => {
+            console.log("🛑 转盘停止转动");
+          }}
+        />
       </div>
 
-      {/* 控制面板 */}
-      <ControlPanel />
+      {/* 通用控制面板 */}
+      <ControlPanel
+        module="wheel"
+        onStartDrawing={handleStartDrawing}
+        onStopDrawing={handleStopDrawing}
+      />
 
       <RightToolbar
         onImport={handleImport}
@@ -270,49 +317,48 @@ export default function GridLotteryPage() {
 
       <ShortcutDisplay />
 
-      {/* 数据管理器 */}
+      {/* Data manager */}
       <DataManager
         isOpen={isDataManagerOpen}
         onClose={() => setIsDataManagerOpen(false)}
-        module="grid"
+        module="wheel"
       />
 
-      {/* 设置模态框 */}
+      {/* Settings modal */}
       <SettingsModal
-        module="grid"
+        module="wheel"
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      {/* 中奖结果模态框 */}
+      {/* Winner results modal */}
       <WinnerResultsModal
-        module="grid"
         isOpen={isResultsOpen}
         onClose={() => setIsResultsOpen(false)}
       />
 
-      {/* 帮助模态框 */}
+      {/* Help modal */}
       <HelpModal
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
-        module="grid"
+        module="wheel"
       />
 
-      {/* 中奖动画 */}
-      <WinnerAnimation module="grid" />
+      {/* Winner animation */}
+      <WinnerAnimation />
 
-      {/* 欢迎/加载提示 */}
+      {/* Welcome/loading prompt */}
       {participants.length === 0 && state === LotteryState.IDLE && (
-        <div className="absolute inset-0 flex items-center justify-center bg-purple-900/70 backdrop-blur-sm z-10">
-          <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-md rounded-2xl p-8 text-white text-center border border-purple-400/30 shadow-2xl">
-            <div className="text-4xl mb-4">🎯</div>
-            <h2 className="text-xl font-semibold mb-4 text-white drop-shadow-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-orange-900/70 backdrop-blur-sm z-10">
+          <div className="bg-gradient-to-br from-orange-500/20 to-yellow-500/20 backdrop-blur-md rounded-2xl p-8 text-white text-center border border-yellow-400/30 shadow-2xl">
+            <div className="text-4xl mb-4">🎡</div>
+            <h2 className="text-xl font-semibold mb-4 text-yellow-100 drop-shadow-lg">
               {settings.pageTitle || t("title")}
             </h2>
-            <p className="text-white/90 mb-6">{t("welcomeMessage")}</p>
+            <p className="text-yellow-200/90 mb-6">{t("welcomeMessage")}</p>
             <button
               onClick={handleImport}
-              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               {t("manageParticipants")}
             </button>

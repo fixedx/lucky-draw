@@ -16,10 +16,15 @@ import { useTranslations } from "next-intl";
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  module?: "ball" | "grid" | "wheel";
 }
 
-export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const t = useTranslations("Ball");
+export default function SettingsModal({
+  isOpen,
+  onClose,
+  module = "ball",
+}: SettingsModalProps) {
+  const t = useTranslations("common");
   const { settings, setSettings, loadSettings } = useLotteryStore();
 
   // 常见奖项类型的国际化键值
@@ -40,13 +45,23 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   // 当弹窗打开时，加载最新设置并同步到本地状态
   useEffect(() => {
     if (isOpen) {
-      setLocalSettings(settings);
+      const updatedSettings = { ...settings };
+      // 转盘模式强制中奖人数为1
+      if (module === "wheel") {
+        updatedSettings.winnerCount = 1;
+      }
+      setLocalSettings(updatedSettings);
     }
-  }, [isOpen, settings]);
+  }, [isOpen, settings, module]);
 
   // 保存设置并关闭弹窗
   const handleSave = () => {
-    setSettings(localSettings);
+    const finalSettings = { ...localSettings };
+    // 转盘模式确保中奖人数为1
+    if (module === "wheel") {
+      finalSettings.winnerCount = 1;
+    }
+    setSettings(finalSettings);
     onClose();
   };
 
@@ -55,7 +70,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     const defaultSettings: LotterySettings = {
       pageTitle: t("defaultPageTitle"),
       prizeType: t("defaultPrizeType"),
-      winnerCount: 1,
+      winnerCount: module === "wheel" ? 1 : 3, // 转盘模式默认1人，其他模式默认3人
       removeWinnersFromPool: true,
     };
     setLocalSettings(defaultSettings);
@@ -66,6 +81,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     key: K,
     value: LotterySettings[K]
   ) => {
+    // 转盘模式下禁止修改中奖人数
+    if (module === "wheel" && key === "winnerCount") {
+      return;
+    }
     setLocalSettings((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -166,50 +185,72 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 </div>
               </div>
 
-              {/* 中奖人数 */}
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  <FontAwesomeIcon icon={faUsers} className="mr-2" />
-                  {t("winnerCount")}
-                </label>
-                <div className="flex items-center space-x-3">
-                  <input
-                    type="number"
-                    min="1"
-                    max="50"
-                    value={localSettings.winnerCount}
-                    onChange={(e) =>
-                      updateLocalSetting(
-                        "winnerCount",
-                        Math.max(1, parseInt(e.target.value) || 1)
-                      )
-                    }
-                    className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-                  />
-                  <span className="text-white text-sm">{t("peopleUnit")}</span>
-                </div>
-                {/* 快捷选择按钮 */}
-                <div className="flex gap-2 mt-2">
-                  {[1, 3, 5, 10].map((count) => (
-                    <button
-                      key={count}
-                      onClick={() => updateLocalSetting("winnerCount", count)}
-                      className={`px-3 py-1 rounded-md text-xs transition-colors ${
-                        localSettings.winnerCount === count
-                          ? "bg-blue-500 text-white"
-                          : "bg-white/10 text-white hover:bg-white/20"
-                      }`}
-                    >
-                      {count}
+              {/* 中奖人数 - 转盘模式下隐藏 */}
+              {module !== "wheel" && (
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    <FontAwesomeIcon icon={faUsers} className="mr-2" />
+                    {t("winnerCount")}
+                  </label>
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="number"
+                      min="1"
+                      max="50"
+                      value={localSettings.winnerCount}
+                      onChange={(e) =>
+                        updateLocalSetting(
+                          "winnerCount",
+                          Math.max(1, parseInt(e.target.value) || 1)
+                        )
+                      }
+                      className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+                    />
+                    <span className="text-white text-sm">
                       {t("peopleUnit")}
-                    </button>
-                  ))}
+                    </span>
+                  </div>
+                  {/* 快捷选择按钮 */}
+                  <div className="flex gap-2 mt-2">
+                    {[1, 3, 5, 10].map((count) => (
+                      <button
+                        key={count}
+                        onClick={() => updateLocalSetting("winnerCount", count)}
+                        className={`px-3 py-1 rounded-md text-xs transition-colors ${
+                          localSettings.winnerCount === count
+                            ? "bg-blue-500 text-white"
+                            : "bg-white/10 text-white hover:bg-white/20"
+                        }`}
+                      >
+                        {count}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* 转盘模式下显示说明 */}
+              {module === "wheel" && (
+                <div className="bg-blue-500/20 border border-blue-400/30 rounded-lg p-3">
+                  <div className="flex items-center space-x-2 text-blue-200 text-sm">
+                    <FontAwesomeIcon icon={faUsers} />
+                    <span className="font-medium">{t("wheelModeNotice")}</span>
+                  </div>
+                  <p className="text-blue-100 text-xs mt-1 opacity-90">
+                    {t("wheelModeDescription")}
+                  </p>
+                </div>
+              )}
 
               {/* 是否移除中奖者 */}
-              <div>
-                <label className="flex items-center space-x-3 cursor-pointer">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <FontAwesomeIcon icon={faTrash} className="text-white" />
+                  <span className="text-white text-sm">
+                    {t("removeWinnersFromPool")}
+                  </span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     checked={localSettings.removeWinnersFromPool}
@@ -219,42 +260,33 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         e.target.checked
                       )
                     }
-                    className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+                    className="sr-only peer"
                   />
-                  <div className="flex items-center text-white">
-                    <FontAwesomeIcon icon={faTrash} className="mr-2" />
-                    <span>{t("removeWinnersFromPool")}</span>
-                  </div>
+                  <div className="w-11 h-6 bg-white/20 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                 </label>
-                <p className="text-white/70 text-xs mt-1 ml-7">
-                  {t("removeWinnersNote")}
-                </p>
               </div>
             </div>
 
             {/* 按钮组 */}
-            <div className="flex justify-between mt-8">
+            <div className="flex space-x-3 mt-8">
               <button
                 onClick={handleReset}
-                className="px-4 py-2 bg-gray-500/20 hover:bg-gray-500/30 text-white rounded-lg transition-colors text-sm"
+                className="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 px-4 rounded-lg transition-colors border border-white/20"
               >
                 {t("resetDefault")}
               </button>
-
-              <div className="flex space-x-3">
-                <button
-                  onClick={onClose}
-                  className="px-4 py-2 bg-gray-500/20 hover:bg-gray-500/30 text-white rounded-lg transition-colors"
-                >
-                  {t("cancel")}
-                </button>
-                <button
-                  onClick={handleSave}
-                  className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
-                >
-                  {t("save")}
-                </button>
-              </div>
+              <button
+                onClick={onClose}
+                className="flex-1 bg-white/10 hover:bg-white/20 text-white py-2 px-4 rounded-lg transition-colors border border-white/20"
+              >
+                {t("cancel")}
+              </button>
+              <button
+                onClick={handleSave}
+                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-2 px-4 rounded-lg transition-all shadow-lg"
+              >
+                {t("save")}
+              </button>
             </div>
           </motion.div>
         </div>

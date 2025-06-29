@@ -23,7 +23,7 @@ export default function WinnerResultsModal({
   isOpen,
   onClose,
 }: WinnerResultsModalProps) {
-  const t = useTranslations("Ball");
+  const t = useTranslations("common");
   const { historyWinners, settings, clearHistory, saveHistoryWinners } =
     useLotteryStore();
 
@@ -253,3 +253,4 @@ export default function WinnerResultsModal({
     </AnimatePresence>
   );
 }
+ 
