@@ -20,6 +20,42 @@ body {
   @apply bg-white text-gray-900;
 }
 
+/* 系统级统一滚动条样式 */
+* {
+  scrollbar-width: thin;
+}
+
+/* WebKit浏览器滚动条样式 */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #6366f1, #8b5cf6);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #4f46e5, #7c3aed);
+  transform: scale(1.1);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(45deg, #4338ca, #6d28d9);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 /* 棋盘格背景，用于显示透明图像 */
 .bg-checkerboard {
   background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
@@ -128,6 +164,38 @@ body {
 
 /* 滚动条角落 */
 .custom-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 弹窗统一滚动条样式 - 紫色渐变主题 */
+.modal-scrollbar * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(147, 51, 234, 0.8) rgba(255, 255, 255, 0.1);
+}
+
+.modal-scrollbar *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.modal-scrollbar *::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.modal-scrollbar *::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #9333ea, #7c3aed);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.modal-scrollbar *::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #7c3aed, #6d28d9);
+  transform: scale(1.05);
+}
+
+.modal-scrollbar *::-webkit-scrollbar-corner {
   background: transparent;
 }
 

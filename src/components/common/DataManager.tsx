@@ -14,7 +14,10 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { useLotteryStore } from "@/utils/lotteryStore";
-import { generateParticipants, getModuleMaxParticipants } from "@/utils/participantUtils";
+import {
+  generateParticipants,
+  getModuleMaxParticipants,
+} from "@/utils/participantUtils";
 import { useTranslations } from "next-intl";
 
 interface DataManagerProps {
@@ -35,9 +38,9 @@ export default function DataManager({
 
   const { participants, setParticipants, resetLottery } = useLotteryStore();
   const maxParticipants = getModuleMaxParticipants(module);
-  
+
   // 获取参与者名字列表
-  const participantNames = participants.map(p => p.name);
+  const participantNames = participants.map((p) => p.name);
 
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,13 +160,13 @@ export default function DataManager({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+        className="fixed inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border border-white/20"
+          className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden border border-white/20 modal-scrollbar"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -187,7 +190,10 @@ export default function DataManager({
               <div className="space-y-6">
                 <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
                   <h3 className="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faFileExcel} className="text-green-400" />
+                    <FontAwesomeIcon
+                      icon={faFileExcel}
+                      className="text-green-400"
+                    />
                     <span>{t("importExport")}</span>
                   </h3>
                   <div className="space-y-3">
@@ -221,7 +227,10 @@ export default function DataManager({
                 {/* Manual Add */}
                 <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
                   <h3 className="text-lg font-semibold text-white mb-4 flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faPlus} className="text-yellow-400" />
+                    <FontAwesomeIcon
+                      icon={faPlus}
+                      className="text-yellow-400"
+                    />
                     <span>{t("manualAdd")}</span>
                   </h3>
                   <div className="flex space-x-2">
@@ -256,7 +265,10 @@ export default function DataManager({
               <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-white flex items-center space-x-2">
-                    <FontAwesomeIcon icon={faUsers} className="text-orange-400" />
+                    <FontAwesomeIcon
+                      icon={faUsers}
+                      className="text-orange-400"
+                    />
                     <span>{t("participantList")}</span>
                   </h3>
                   <button

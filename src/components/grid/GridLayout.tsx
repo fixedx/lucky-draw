@@ -4,6 +4,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useLotteryStore } from "@/utils/lotteryStore";
 import { LotteryState, Participant } from "@/types/types";
+import { selectRandomParticipant as selectRandomFromList } from "@/utils/nameGenerator";
 
 // 闪烁阶段枚举
 enum FlashingPhase {
@@ -238,8 +239,9 @@ export default function GridLayout() {
   const selectRandomParticipant = useCallback(() => {
     if (participants.length === 0) return;
 
-    const randomIndex = Math.floor(Math.random() * participants.length);
-    const selectedParticipant = participants[randomIndex];
+    // 使用统一的随机选择算法确保公平性
+    const selectedParticipant = selectRandomFromList(participants);
+    if (!selectedParticipant) return;
 
     setFlashingParticipants(new Set([selectedParticipant.id]));
 

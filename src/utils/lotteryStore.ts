@@ -230,8 +230,15 @@ export const useLotteryStore = create<LotteryStore>((set, get) => ({
         // 根据设置的中奖人数随机选择获奖者
         const winnerCount = Math.min(settings.winnerCount, availableParticipants.length);
         const selectedWinners: Participant[] = [];
-        const shuffled = [...availableParticipants].sort(() => Math.random() - 0.5);
 
+        // 使用Fisher-Yates洗牌算法确保公平性
+        const shuffled = [...availableParticipants];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        // 取前winnerCount个作为获奖者
         for (let i = 0; i < winnerCount; i++) {
             selectedWinners.push(shuffled[i]);
         }

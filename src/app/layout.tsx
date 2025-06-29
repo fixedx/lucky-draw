@@ -9,16 +9,19 @@ export const metadata: Metadata = {
     template: "%s | Lucky Draw System",
   },
   description:
-    "Professional online lucky draw system with stunning 3D sphere animation. Supports customized participant lists, winner counts and prize settings. Perfect for company events, marketing campaigns, annual meetings and celebrations. Free, multilingual and easy to use.",
+    "Professional multi-mode lucky draw system featuring 3D sphere animation, grid cards, and spinning wheel. Supports customized participant lists, winner counts and prize settings. Perfect for company events, marketing campaigns, annual meetings, team building and celebrations. Free, multilingual and easy to use.",
   keywords: [
     "lucky draw system",
     "3D lottery animation",
+    "spinning wheel lottery",
+    "grid card lottery",
     "event drawing tool",
     "annual meeting draw",
     "random draw generator",
     "online drawing tool",
     "prize drawing",
     "raffle system",
+    "wheel of fortune",
     "company event tool",
     "marketing campaign draw",
     "participant management",
@@ -26,9 +29,23 @@ export const metadata: Metadata = {
     "multilingual lottery",
     "free drawing tool",
     "3D sphere animation",
+    "interactive wheel",
+    "visual grid lottery",
     "event management",
     "team building activity",
     "celebration tool",
+    "game show wheel",
+    "contest platform",
+    "instant winner",
+    "fair randomization",
+    "excel import",
+    "participant cards",
+    "winner history",
+    "customizable prizes",
+    "entertainment events",
+    "corporate lottery",
+    "workshop activities",
+    "interactive presentations",
   ],
   authors: [{ name: "Lucky Draw Team", url: "https://luckydraw.pub" }],
   creator: "Lucky Draw Team",
@@ -36,9 +53,9 @@ export const metadata: Metadata = {
   category: "Productivity",
   classification: "Business Tools",
   openGraph: {
-    title: "Lucky Draw System | Professional 3D Event Drawing Tool",
+    title: "Lucky Draw System | Professional Multi-Mode Event Drawing Tool",
     description:
-      "Professional online lucky draw system with stunning 3D sphere animation. Supports customized participant lists, winner counts and prize settings. Perfect for company events, marketing campaigns, annual meetings and celebrations. Free, multilingual and easy to use.",
+      "Professional multi-mode lucky draw system featuring 3D sphere animation, grid cards, and spinning wheel. Supports customized participant lists, winner counts and prize settings. Perfect for company events, marketing campaigns, annual meetings, team building and celebrations. Free, multilingual and easy to use.",
     url: "https://luckydraw.pub",
     siteName: "Lucky Draw System",
     images: [
@@ -63,9 +80,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lucky Draw System | Professional 3D Event Drawing Tool",
+    title: "Lucky Draw System | Professional Multi-Mode Event Drawing Tool",
     description:
-      "Professional online lucky draw system with stunning 3D sphere animation. Perfect for company events, marketing campaigns, annual meetings and celebrations. Free, multilingual and easy to use.",
+      "Professional multi-mode lucky draw system featuring 3D sphere animation, grid cards, and spinning wheel. Perfect for company events, marketing campaigns, annual meetings, team building and celebrations. Free, multilingual and easy to use.",
     images: ["/images/twitter-image.webp"],
     creator: "@luckydrawsystem",
     site: "@luckydrawsystem",
@@ -153,9 +170,15 @@ const structuredData = {
       "@type": "WebApplication",
       "@id": "https://luckydraw.pub/#webapp",
       name: "Lucky Draw System",
-      alternateName: ["Lucky Draw", "3D Lottery System", "Event Drawing Tool"],
+      alternateName: [
+        "Lucky Draw",
+        "3D Lottery System",
+        "Spinning Wheel Lottery",
+        "Grid Card Lottery",
+        "Event Drawing Tool",
+      ],
       description:
-        "Professional online lucky draw system with stunning 3D sphere animation. Supports customized participant lists, winner counts and prize settings. Perfect for company events, marketing campaigns, annual meetings and celebrations.",
+        "Professional multi-mode lucky draw system featuring 3D sphere animation, grid cards, and spinning wheel. Supports customized participant lists, winner counts and prize settings. Perfect for company events, marketing campaigns, annual meetings, team building and celebrations.",
       url: "https://luckydraw.pub",
       applicationCategory: ["UtilityApplication", "BusinessApplication"],
       operatingSystem: "Web Browser",
@@ -187,13 +210,18 @@ const structuredData = {
       },
       featureList: [
         "3D Sphere Animation",
+        "Spinning Wheel Lottery",
+        "Grid Card Layout",
         "Random Draw Algorithm",
         "Custom Participant Lists",
         "Multiple Prize Levels",
         "Multilingual Support (9 languages)",
         "Real-time Animation Effects",
+        "Excel Data Import",
+        "Winner History Tracking",
         "Export Winner Results",
         "Import/Export Participant Data",
+        "Interactive Visual Effects",
         "Responsive Design",
         "No Registration Required",
       ],
@@ -322,7 +350,6 @@ export default function RootLayout({
             html, body {
               margin: 0;
               padding: 0;
-              overflow: hidden;
               width: 100%;
               height: 100%;
             }
@@ -373,7 +400,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className="bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 text-white min-h-screen w-full overflow-hidden">
+      <body className="bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 text-white min-h-screen w-full">
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

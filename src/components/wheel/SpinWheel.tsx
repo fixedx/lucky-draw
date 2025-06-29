@@ -284,15 +284,6 @@ const SpinWheel = forwardRef<SpinWheelRef, SpinWheelProps>(
       ctx.lineWidth = 5;
       ctx.stroke();
 
-      // 中心文字
-      ctx.fillStyle = "#fff";
-      ctx.font = "bold 20px Arial";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.shadowColor = "rgba(0,0,0,0.5)";
-      ctx.shadowBlur = 3;
-      ctx.fillText("抽奖", center, center);
-
       // 重新设计指针：像真正的指针一样
       ctx.save();
       ctx.translate(center, center);

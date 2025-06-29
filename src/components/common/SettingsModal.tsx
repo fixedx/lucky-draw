@@ -97,7 +97,7 @@ export default function SettingsModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -106,7 +106,7 @@ export default function SettingsModal({
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 w-full max-w-md mx-4 border border-white/20 shadow-2xl"
+            className="relative bg-white/10 backdrop-blur-md rounded-2xl p-6 w-full max-w-md mx-4 border border-white/20 shadow-2xl modal-scrollbar"
             onClick={(e) => e.stopPropagation()}
           >
             {/* 标题栏 */}

@@ -212,7 +212,7 @@ function WinnerCard({
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.5, type: "spring" }}
-        className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-4 flex-1 overflow-y-auto min-h-0 custom-scrollbar"
+        className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 mb-4 flex-1 overflow-y-auto min-h-0 modal-scrollbar"
         style={{
           scrollbarWidth: "thin",
           scrollbarColor: "rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)",
@@ -359,7 +359,7 @@ export default function WinnerAnimation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 backdrop-blur-sm z-40"
           />
 
           {/* 主容器 */}

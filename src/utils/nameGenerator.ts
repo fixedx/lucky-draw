@@ -78,6 +78,32 @@ export const generateRandomEnglishNames = (count: number): string[] => {
 };
 
 /**
+ * 从参与者名单中随机选择一个参与者
+ * @param participants 参与者名单
+ * @returns 随机选择的参与者，如果列表为空则返回null
+ */
+export const selectRandomParticipant = (
+    participants: Participant[]
+): Participant | null => {
+    if (participants.length === 0) {
+        return null;
+    }
+
+    if (participants.length === 1) {
+        return participants[0];
+    }
+
+    // 使用Fisher-Yates洗牌算法确保公平性
+    const shuffled = [...participants];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    return shuffled[0];
+};
+
+/**
  * 从参与者名单中随机选择指定数量的获奖者
  * @param participants 参与者名单
  * @param winnerCount 获奖者数量

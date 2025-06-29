@@ -253,46 +253,6 @@ export default function Home() {
             )}
           </div>
         </motion.div>
-
-        {/* Get Started Section */}
-        <motion.div
-          className="text-center"
-          variants={fadeInUp}
-          initial="initial"
-          animate="animate"
-        >
-          <div className="mx-auto max-w-3xl rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 p-8 text-white shadow-2xl">
-            <h2 className="mb-4 text-3xl font-bold">{t("getStarted.title")}</h2>
-            <p className="mb-6 text-lg leading-relaxed opacity-90">
-              {t("getStarted.description")}
-            </p>
-            <div className="mb-6 rounded-lg bg-white/10 p-4 backdrop-blur-sm">
-              <p className="text-sm">
-                💡 <strong>{t("tips")}：</strong> {t("getStarted.tip")}
-              </p>
-            </div>
-            <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
-              <Link href={`/${locale}/ball`}>
-                <motion.button
-                  className="w-full sm:w-auto rounded-xl bg-white px-8 py-3 font-semibold text-purple-600 transition-all hover:bg-gray-50"
-                  {...scaleOnHover}
-                >
-                  <FontAwesomeIcon icon={faCube} className="mr-2" />
-                  {t("start3DLottery")}
-                </motion.button>
-              </Link>
-              <Link href={`/${locale}/grid`}>
-                <motion.button
-                  className="w-full sm:w-auto rounded-xl bg-white/20 px-8 py-3 font-semibold backdrop-blur-sm transition-all hover:bg-white/30"
-                  {...scaleOnHover}
-                >
-                  <FontAwesomeIcon icon={faThLarge} className="mr-2" />
-                  {t("startGridLottery")}
-                </motion.button>
-              </Link>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </div>
   );

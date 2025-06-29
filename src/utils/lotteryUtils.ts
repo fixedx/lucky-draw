@@ -81,8 +81,14 @@ export class LotteryUtils {
             return null;
         }
 
-        const randomIndex = Math.floor(Math.random() * availableParticipants.length);
-        return availableParticipants[randomIndex];
+        // 使用Fisher-Yates算法确保公平性
+        const shuffled = [...availableParticipants];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        return shuffled[0];
     }
 
     /**
