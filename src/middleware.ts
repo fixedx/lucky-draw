@@ -9,10 +9,10 @@ const middleware = createMiddleware({
     defaultLocale: 'en',
 
     // 始终使用路径前缀
-    localePrefix: 'always',
+    localePrefix: 'as-needed',
 
     // 启用自动重定向
-    alternateLinks: true,
+    alternateLinks: false,
 
     // 启用语言检测
     localeDetection: true

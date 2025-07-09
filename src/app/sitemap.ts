@@ -15,14 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: currentDate,
             changeFrequency: 'weekly' as const,
             priority: locale === 'en' ? 1.0 : 0.9,
-            alternates: {
-                languages: Object.fromEntries(
-                    supportedLocales.map(lang => [
-                        lang === 'zh' ? 'zh-CN' : lang === 'pt' ? 'pt-BR' : `${lang}-${lang.toUpperCase()}`,
-                        `${baseUrl}/${lang}`
-                    ])
-                )
-            }
+            // 语言跳转链接已移除，因为URL结构已改变
         },
         // 3D球体抽奖页面
         {
@@ -30,14 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: currentDate,
             changeFrequency: 'weekly' as const,
             priority: locale === 'en' ? 0.9 : 0.8,
-            alternates: {
-                languages: Object.fromEntries(
-                    supportedLocales.map(lang => [
-                        lang === 'zh' ? 'zh-CN' : lang === 'pt' ? 'pt-BR' : `${lang}-${lang.toUpperCase()}`,
-                        `${baseUrl}/${lang}/ball`
-                    ])
-                )
-            }
+            // 语言跳转链接已移除，因为URL结构已改变
         },
         // 网格抽奖页面
         {
@@ -45,14 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: currentDate,
             changeFrequency: 'weekly' as const,
             priority: locale === 'en' ? 0.9 : 0.8,
-            alternates: {
-                languages: Object.fromEntries(
-                    supportedLocales.map(lang => [
-                        lang === 'zh' ? 'zh-CN' : lang === 'pt' ? 'pt-BR' : `${lang}-${lang.toUpperCase()}`,
-                        `${baseUrl}/${lang}/grid`
-                    ])
-                )
-            }
+            // 语言跳转链接已移除，因为URL结构已改变
         },
         // 大转盘抽奖页面
         {
@@ -60,14 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
             lastModified: currentDate,
             changeFrequency: 'weekly' as const,
             priority: locale === 'en' ? 0.9 : 0.8,
-            alternates: {
-                languages: Object.fromEntries(
-                    supportedLocales.map(lang => [
-                        lang === 'zh' ? 'zh-CN' : lang === 'pt' ? 'pt-BR' : `${lang}-${lang.toUpperCase()}`,
-                        `${baseUrl}/${lang}/wheel`
-                    ])
-                )
-            }
+            // 语言跳转链接已移除，因为URL结构已改变
         }
     ])
 
