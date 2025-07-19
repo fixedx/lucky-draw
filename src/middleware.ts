@@ -8,8 +8,8 @@ const middleware = createMiddleware({
     // 默认语言
     defaultLocale: 'en',
 
-    // 始终使用路径前缀
-    localePrefix: 'as-needed',
+    // 始终使用路径前缀 - 优化SEO和国际化支持
+    localePrefix: 'always',
 
     // 启用自动重定向
     alternateLinks: false,

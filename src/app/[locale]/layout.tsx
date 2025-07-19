@@ -236,7 +236,17 @@ export async function generateMetadata({
     },
     alternates: {
       canonical: `https://luckydraw.pub/${locale}`,
-      // 语言跳转链接已移除，因为URL结构已改变
+      languages: {
+        en: "https://luckydraw.pub/en",
+        "zh-CN": "https://luckydraw.pub/zh",
+        fr: "https://luckydraw.pub/fr",
+        de: "https://luckydraw.pub/de",
+        es: "https://luckydraw.pub/es",
+        ko: "https://luckydraw.pub/ko",
+        ja: "https://luckydraw.pub/ja",
+        "pt-BR": "https://luckydraw.pub/pt",
+        ru: "https://luckydraw.pub/ru",
+      },
     },
   };
 }

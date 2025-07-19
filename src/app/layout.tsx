@@ -148,7 +148,17 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://luckydraw.pub",
-    // 语言跳转链接已移除，因为URL结构已改变
+    languages: {
+      "en-US": "https://luckydraw.pub/en",
+      "zh-CN": "https://luckydraw.pub/zh",
+      "fr-FR": "https://luckydraw.pub/fr",
+      "de-DE": "https://luckydraw.pub/de",
+      "es-ES": "https://luckydraw.pub/es",
+      "ko-KR": "https://luckydraw.pub/ko",
+      "ja-JP": "https://luckydraw.pub/ja",
+      "pt-BR": "https://luckydraw.pub/pt",
+      "ru-RU": "https://luckydraw.pub/ru",
+    },
   },
 };
 
@@ -319,7 +329,21 @@ export default function RootLayout({
           }}
         />
 
-        {/* 语言跳转链接已移除，因为URL结构已改变 */}
+        {/* hreflang标签 - 改善国际化SEO */}
+        <link rel="alternate" hrefLang="en" href="https://luckydraw.pub/en" />
+        <link rel="alternate" hrefLang="zh" href="https://luckydraw.pub/zh" />
+        <link rel="alternate" hrefLang="fr" href="https://luckydraw.pub/fr" />
+        <link rel="alternate" hrefLang="de" href="https://luckydraw.pub/de" />
+        <link rel="alternate" hrefLang="es" href="https://luckydraw.pub/es" />
+        <link rel="alternate" hrefLang="ko" href="https://luckydraw.pub/ko" />
+        <link rel="alternate" hrefLang="ja" href="https://luckydraw.pub/ja" />
+        <link rel="alternate" hrefLang="pt" href="https://luckydraw.pub/pt" />
+        <link rel="alternate" hrefLang="ru" href="https://luckydraw.pub/ru" />
+        <link
+          rel="alternate"
+          hrefLang="x-default"
+          href="https://luckydraw.pub"
+        />
 
         <style>
           {`
